@@ -29,13 +29,13 @@ const toSupabaseCar = (body) => ({
   model: String(body.model || "").trim(),
   year: Number(body.year),
   price: Number(body.price),
-  mileage: Number(body.mileage),
+  mileage: Number(body.mileage) || 0,
   fuel_type: String(body.fuelType || "").trim(),
   transmission: String(body.transmission || "").trim(),
   color: String(body.color || "").trim(),
   images: Array.isArray(body.images) ? body.images : [],
-  condition: String(body.condition || "").trim(),
-  contact_number: String(body.contactNumber || "").trim(),
+  condition: String(body.condition || "Used").trim(),
+  contact_number: String(body.contactNumber || "0733493804").trim(),
   is_available: body.isAvailable ?? true,
 });
 
@@ -53,7 +53,7 @@ const validateCar = (car) => {
     }
   }
 
-  const numericFields = ["year", "price", "mileage"];
+  const numericFields = ["year", "price"];
   for (const field of numericFields) {
     if (!Number.isFinite(car[field]) || car[field] < 0) {
       const error = new Error(`Invalid numeric value for: ${field}`);

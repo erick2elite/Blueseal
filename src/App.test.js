@@ -20,25 +20,25 @@ describe('Blue Seal Frontend App', () => {
     expect(await screen.findByAltText(/BLUESEAL MOTOR MANAGER'S LTD/i)).toBeInTheDocument();
   });
 
-  it('renders the Cars and Admin Panel nav buttons', async () => {
+  it('renders the Showroom and Admin Panel nav buttons', async () => {
     render(<CarListing />);
     await screen.findByAltText(/BLUESEAL MOTOR MANAGER'S LTD/i);
     expect(screen.getByRole('button', { name: /car listings/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /admin/i })).toBeInTheDocument();
   });
 
-  it('renders search input and filter toggle button', async () => {
+  it('renders search input and category filter tabs', async () => {
     render(<CarListing />);
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search make, model or title…')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /search cars/i })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/Search make, model/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /^All Vehicles$/i })).toBeInTheDocument();
     });
   });
 
   it('shows empty state message when no cars are available', async () => {
     render(<CarListing />);
     await waitFor(() => {
-      expect(screen.getByText(/no cars match your filters/i)).toBeInTheDocument();
+      expect(screen.getByText(/No vehicles match your search criteria/i)).toBeInTheDocument();
     });
   });
 
