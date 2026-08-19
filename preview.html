@@ -553,7 +553,10 @@
       const [notification, setNotification] = useState('');
       const [toastMsg, setToastMsg] = useState('');
       const [loginError, setLoginError] = useState('');
-      const [loginCreds, setLoginCreds] = useState({ username: 'admin', password: 'admin123bmm' });
+      const [loginCreds, setLoginCreds] = useState({ username: '', password: '' });
+      const [showPassword, setShowPassword] = useState(false);
+      const [failedAttempts, setFailedAttempts] = useState(0);
+      const [lockoutSeconds, setLockoutSeconds] = useState(0);
       const [adminSearch, setAdminSearch] = useState('');
 
       const [formData, setFormData] = useState({
@@ -582,6 +585,46 @@
         localStorage.setItem('bluesealCars', JSON.stringify(cars));
       }, [cars]);
 
+      // Lockout countdown timer
+      useEffect(() => {
+        if (lockoutSeconds <= 0) return;
+        const timer = setInterval(() => {
+          setLockoutSeconds(prev => {
+            if (prev <= 1) {
+              setLoginError('');
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        return () => clearInterval(timer);
+      }, [lockoutSeconds]);
+
+      // 30-minute idle inactivity auto-logout
+      useEffect(() => {
+        if (!isAuthenticated) return;
+        const INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+        let timeoutId;
+
+        const resetInactivity = () => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            setIsAuthenticated(false);
+            setShowAdmin(false);
+            showToast('Admin session expired due to 30 minutes of inactivity.');
+          }, INACTIVITY_TIMEOUT);
+        };
+
+        const evs = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
+        evs.forEach(e => window.addEventListener(e, resetInactivity, { passive: true }));
+        resetInactivity();
+
+        return () => {
+          clearTimeout(timeoutId);
+          evs.forEach(e => window.removeEventListener(e, resetInactivity));
+        };
+      }, [isAuthenticated]);
+
       const notify = (msg) => {
         setNotification(msg);
         setTimeout(() => setNotification(''), 4000);
@@ -594,11 +637,26 @@
 
       const handleLoginSubmit = (e) => {
         e.preventDefault();
-        if (loginCreds.password === 'admin123bmm' && (loginCreds.username.toLowerCase() === 'admin' || loginCreds.username.toLowerCase() === 'blueseal')) {
+        if (lockoutSeconds > 0) return;
+
+        const cleanUser = loginCreds.username.trim().toLowerCase();
+        const validUser = cleanUser === 'admin' || cleanUser === 'blueseal';
+        const validPass = loginCreds.password === 'admin123bmm';
+
+        if (validUser && validPass) {
           setLoginError('');
+          setFailedAttempts(0);
           setIsAuthenticated(true);
+          showToast('Securely authenticated as Dealership Admin.');
         } else {
-          setLoginError('Invalid credentials. Password is admin123bmm');
+          const nextAttempts = failedAttempts + 1;
+          setFailedAttempts(nextAttempts);
+          if (nextAttempts >= 5) {
+            setLockoutSeconds(900); // 15 minutes lockout
+            setLoginError('Account temporarily locked for 15 minutes due to 5 consecutive failed attempts.');
+          } else {
+            setLoginError(`Invalid username or password. ${5 - nextAttempts} attempt(s) remaining before security lockout.`);
+          }
         }
       };
 
@@ -823,7 +881,19 @@
                     BLUESEAL MOTOR MANAGER'S LTD (BMM) · Kiambu Road
                   </p>
                   
-                  {loginError && (
+                  {lockoutSeconds > 0 && (
+                    <div className="alert alert-error" style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+                      <i className="fa-solid fa-clock"></i>
+                      <div>
+                        <strong>Security Lockout:</strong> Too many failed attempts.
+                        <div style={{ fontSize: '.8rem', marginTop: '.2rem' }}>
+                          Retry available in <strong>{Math.floor(lockoutSeconds / 60)}:{(lockoutSeconds % 60) < 10 ? '0' : ''}{lockoutSeconds % 60}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {loginError && lockoutSeconds <= 0 && (
                     <div className="alert alert-error" style={{ marginBottom: '1rem' }}>
                       <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: '.4rem' }}></i> {loginError}
                     </div>
@@ -838,36 +908,49 @@
                           type="text" 
                           value={loginCreds.username} 
                           onChange={e => { setLoginError(''); setLoginCreds(p => ({ ...p, username: e.target.value })); }}
+                          disabled={lockoutSeconds > 0}
                           placeholder="admin"
                           required 
+                          autoComplete="username"
                         />
                       </div>
                     </div>
                     <div style={{ marginBottom: '1.35rem' }}>
                       <label className="form-label">Password</label>
-                      <div className="input-group">
+                      <div className="input-group" style={{ position: 'relative' }}>
                         <i className="fa-solid fa-lock"></i>
                         <input 
-                          type="password" 
+                          type={showPassword ? 'text' : 'password'} 
                           value={loginCreds.password} 
                           onChange={e => { setLoginError(''); setLoginCreds(p => ({ ...p, password: e.target.value })); }}
-                          placeholder="admin123bmm"
+                          disabled={lockoutSeconds > 0}
+                          placeholder="••••••••"
                           required 
+                          autoComplete="current-password"
+                          style={{ paddingRight: '2.5rem' }}
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(v => !v)}
+                          tabIndex="-1"
+                          style={{
+                            position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+                            background: 'none', border: 'none', color: 'var(--text-3)', cursor: 'pointer', padding: '4px'
+                          }}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                        </button>
                       </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginBottom: '.65rem' }}>
-                      <i className="fa-solid fa-right-to-bracket"></i> Sign In to Admin Panel
-                    </button>
-
                     <button 
-                      type="button" 
-                      onClick={() => { setLoginCreds({ username: 'admin', password: 'admin123bmm' }); setLoginError(''); setIsAuthenticated(true); }} 
-                      className="btn btn-ghost btn-sm" 
-                      style={{ width: '100%', color: 'var(--red)', borderColor: 'var(--red)' }}
+                      type="submit" 
+                      disabled={lockoutSeconds > 0}
+                      className="btn btn-primary btn-lg" 
+                      style={{ width: '100%', marginBottom: '.65rem' }}
                     >
-                      <i className="fa-solid fa-bolt"></i> Quick Auto-Fill &amp; Sign-In
+                      <i className="fa-solid fa-shield-halved"></i> {lockoutSeconds > 0 ? `Locked (${Math.floor(lockoutSeconds / 60)}:${(lockoutSeconds % 60) < 10 ? '0' : ''}${lockoutSeconds % 60})` : 'Sign In Securely'}
                     </button>
                   </form>
 

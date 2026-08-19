@@ -1,7 +1,7 @@
 import express from "express"
 import connectDB from "./config/db.js";
 import CarRoutes from "./Routes/CarRoutes.js";
-import { loginAdmin } from "./auth.js";
+import { loginAdmin, requireAdmin, verifyAdminAuth } from "./auth.js";
 import dotenv from "dotenv"
 
 dotenv.config();
@@ -51,6 +51,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.post("/api/auth/login", loginAdmin);
+app.get("/api/auth/verify", requireAdmin, verifyAdminAuth);
 
 const requireDatabase = async (req, res, next) => {
   try {

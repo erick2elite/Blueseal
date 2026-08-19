@@ -92,6 +92,44 @@ const App = () => {
   const setFilter = (k, v) => setFilters(p => ({ ...p, [k]: v }));
   const clearFilters = () => setFilters({ searchTerm: '', fuelFilter: '', yearFilter: '', transmissionFilter: '', colorFilter: '' });
 
+  // Verify token validity on load
+  useEffect(() => {
+    if (!authToken) return;
+    fetch(`${API_URL}/api/auth/verify`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          handleLogout();
+        }
+      })
+      .catch(() => {});
+  }, [authToken]);
+
+  // 30-minute idle session auto-logout
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 mins
+    let timeoutId;
+
+    const resetInactivityTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        handleLogout();
+        showToast('Admin session expired due to 30 minutes of inactivity.');
+      }, INACTIVITY_TIMEOUT);
+    };
+
+    const events = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
+    events.forEach((ev) => window.addEventListener(ev, resetInactivityTimer, { passive: true }));
+    resetInactivityTimer();
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach((ev) => window.removeEventListener(ev, resetInactivityTimer));
+    };
+  }, [isAuthenticated]);
+
   const handleLogout = () => {
     localStorage.removeItem('bluesealAdminToken');
     localStorage.removeItem('smvtAdminToken');

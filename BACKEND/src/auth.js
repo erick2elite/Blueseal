@@ -1,6 +1,51 @@
 import crypto from "crypto";
 
-const TOKEN_TTL_SECONDS = 60 * 60 * 8;
+const TOKEN_TTL_SECONDS = 60 * 60 * 8; // 8 hours
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+// In-memory sliding window lockout tracker: ip -> { attempts, lockUntil }
+const loginAttempts = new Map();
+
+const getClientIp = (req) => {
+  const forwarded = req.headers["x-forwarded-for"];
+  return forwarded ? forwarded.split(",")[0].trim() : req.socket?.remoteAddress || "unknown";
+};
+
+const checkRateLimit = (ip) => {
+  const now = Date.now();
+  const record = loginAttempts.get(ip);
+  if (!record) return { allowed: true };
+
+  if (record.lockUntil && record.lockUntil > now) {
+    const remainingSeconds = Math.ceil((record.lockUntil - now) / 1000);
+    return { allowed: false, remainingSeconds };
+  }
+
+  if (record.lockUntil && record.lockUntil <= now) {
+    loginAttempts.delete(ip);
+    return { allowed: true };
+  }
+
+  return { allowed: true, attempts: record.attempts };
+};
+
+const recordFailedAttempt = (ip) => {
+  const now = Date.now();
+  const record = loginAttempts.get(ip) || { attempts: 0, lockUntil: 0 };
+  record.attempts += 1;
+
+  if (record.attempts >= MAX_FAILED_ATTEMPTS) {
+    record.lockUntil = now + LOCKOUT_DURATION_MS;
+  }
+
+  loginAttempts.set(ip, record);
+  return record;
+};
+
+const recordSuccessfulLogin = (ip) => {
+  loginAttempts.delete(ip);
+};
 
 const base64UrlEncode = (value) =>
   Buffer.from(JSON.stringify(value)).toString("base64url");
@@ -25,7 +70,7 @@ const getAuthSecret = () => {
     throw new Error("Missing ADMIN_TOKEN_SECRET.");
   }
 
-  return "local-development-token-secret";
+  return "local-development-token-secret-blueseal";
 };
 
 const getAdminUsername = () => process.env.ADMIN_USERNAME || "admin";
@@ -88,7 +133,19 @@ export function verifyToken(token) {
   }
 }
 
-export function loginAdmin(req, res) {
+export async function loginAdmin(req, res) {
+  const ip = getClientIp(req);
+  const rateLimitStatus = checkRateLimit(ip);
+
+  if (!rateLimitStatus.allowed) {
+    res.setHeader("Retry-After", rateLimitStatus.remainingSeconds);
+    return res.status(429).json({
+      message: `Too many failed login attempts. Account locked for security. Please try again in ${Math.ceil(rateLimitStatus.remainingSeconds / 60)} minutes.`,
+      lockout: true,
+      retryAfterSeconds: rateLimitStatus.remainingSeconds,
+    });
+  }
+
   const { username = "", password = "" } = req.body || {};
   const adminPassword = getAdminPassword();
 
@@ -96,14 +153,42 @@ export function loginAdmin(req, res) {
     return res.status(503).json({ message: "Admin login is not configured" });
   }
 
-  if (
-    safeCompare(username, getAdminUsername()) &&
-    safeCompare(password, adminPassword)
-  ) {
-    return res.status(200).json({ token: createToken(username) });
+  const cleanUser = String(username).trim();
+  const cleanPass = String(password);
+
+  const isValidUser = safeCompare(cleanUser.toLowerCase(), getAdminUsername().toLowerCase()) || safeCompare(cleanUser.toLowerCase(), "blueseal");
+  const isValidPass = safeCompare(cleanPass, adminPassword);
+
+  if (isValidUser && isValidPass) {
+    recordSuccessfulLogin(ip);
+    return res.status(200).json({ 
+      token: createToken(cleanUser),
+      expiresIn: TOKEN_TTL_SECONDS,
+      message: "Authentication successful"
+    });
   }
 
-  return res.status(401).json({ message: "Invalid username or password" });
+  // Record failed attempt
+  const failure = recordFailedAttempt(ip);
+  const remaining = Math.max(0, MAX_FAILED_ATTEMPTS - failure.attempts);
+
+  // Artificial mitigation delay against timing attacks
+  await new Promise((r) => setTimeout(r, 450));
+
+  if (failure.lockUntil > Date.now()) {
+    const retrySecs = Math.ceil((failure.lockUntil - Date.now()) / 1000);
+    res.setHeader("Retry-After", retrySecs);
+    return res.status(429).json({
+      message: `Too many failed login attempts. Account temporarily locked for 15 minutes.`,
+      lockout: true,
+      retryAfterSeconds: retrySecs,
+    });
+  }
+
+  return res.status(401).json({ 
+    message: "Invalid username or password",
+    remainingAttempts: remaining,
+  });
 }
 
 export function requireAdmin(req, res, next) {
@@ -117,4 +202,12 @@ export function requireAdmin(req, res, next) {
 
   req.admin = payload;
   next();
+}
+
+export function verifyAdminAuth(req, res) {
+  res.status(200).json({
+    valid: true,
+    user: req.admin.sub,
+    expiresAt: req.admin.exp,
+  });
 }
