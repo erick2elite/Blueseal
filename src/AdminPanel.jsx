@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   FaPlus, FaEdit, FaTrash, FaList, FaUpload, FaTimes,
-  FaFileDownload, FaSearch, FaCar, FaMoneyBillWave, FaCheckCircle,
-  FaClock, FaTag, FaCheck
+  FaFileDownload, FaSearch
 } from 'react-icons/fa';
 import { API_URL } from './api';
 import './smvt.css';

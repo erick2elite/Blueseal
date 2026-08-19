@@ -62,7 +62,7 @@ const App = () => {
   // Finance calculator state
   const [depositPct, setDepositPct] = useState(20);
   const [loanMonths, setLoanMonths] = useState(36);
-  const [interestRate, setInterestRate] = useState(13.5);
+  const interestRate = 13.5;
 
   const showToast = (msg) => {
     setToastMsg(msg);
@@ -319,6 +319,12 @@ const App = () => {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {error && (
+              <div className="alert alert--error" role="alert" style={{ marginBottom: '1rem' }}>
+                {error}
+              </div>
+            )}
 
             {/* Results Count */}
             {!loading && (
