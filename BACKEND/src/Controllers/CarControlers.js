@@ -1,4 +1,5 @@
 import { getCarsTable, supabaseRequest } from "../config/supabase.js";
+import { getPostgresPool } from "../config/postgres.js";
 
 const table = getCarsTable();
 const isProd = process.env.NODE_ENV === "production";
@@ -9,16 +10,16 @@ const toClientCar = (row) => ({
   title: row.title,
   brand: row.brand,
   model: row.model,
-  year: row.year,
+  year: Number(row.year),
   price: Number(row.price),
-  mileage: row.mileage,
+  mileage: Number(row.mileage) || 0,
   fuelType: row.fuel_type,
   transmission: row.transmission,
   color: row.color,
-  images: row.images || [],
+  images: Array.isArray(row.images) ? row.images : (typeof row.images === 'string' ? JSON.parse(row.images || '[]') : []),
   condition: row.condition,
   contactNumber: row.contact_number,
-  isAvailable: row.is_available,
+  isAvailable: row.is_available ?? true,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
 });
@@ -96,6 +97,12 @@ const sendError = (res, error, fallbackStatus = 500) => {
 
 export async function getCar(req, res) {
   try {
+    const pool = getPostgresPool();
+    if (pool) {
+      const result = await pool.query('SELECT * FROM public.cars ORDER BY created_at DESC');
+      return res.status(200).json(result.rows.map(toClientCar));
+    }
+
     const cars = await supabaseRequest(`${table}?select=*&order=created_at.desc`);
     res.status(200).json((cars || []).map(toClientCar));
   } catch (error) {
@@ -107,6 +114,22 @@ export async function postCar(req, res) {
   try {
     const car = toSupabaseCar(req.body || {});
     validateCar(car);
+
+    const pool = getPostgresPool();
+    if (pool) {
+      const query = `
+        INSERT INTO public.cars (title, brand, model, year, price, mileage, fuel_type, transmission, color, images, condition, contact_number, is_available)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        RETURNING *;
+      `;
+      const values = [
+        car.title, car.brand, car.model, car.year, car.price, car.mileage,
+        car.fuel_type, car.transmission, car.color, JSON.stringify(car.images),
+        car.condition, car.contact_number, car.is_available
+      ];
+      const result = await pool.query(query, values);
+      return res.status(201).json(toClientCar(result.rows[0]));
+    }
 
     const savedCars = await supabaseRequest(table, {
       method: "POST",
@@ -135,6 +158,28 @@ export async function updateCar(req, res) {
     const car = toSupabaseCar(req.body || {});
     validateCar(car);
 
+    const pool = getPostgresPool();
+    if (pool) {
+      const query = `
+        UPDATE public.cars
+        SET title = $1, brand = $2, model = $3, year = $4, price = $5, mileage = $6,
+            fuel_type = $7, transmission = $8, color = $9, images = $10,
+            condition = $11, contact_number = $12, is_available = $13, updated_at = now()
+        WHERE id = $14
+        RETURNING *;
+      `;
+      const values = [
+        car.title, car.brand, car.model, car.year, car.price, car.mileage,
+        car.fuel_type, car.transmission, car.color, JSON.stringify(car.images),
+        car.condition, car.contact_number, car.is_available, id
+      ];
+      const result = await pool.query(query, values);
+      if (!result.rows.length) {
+        return res.status(404).json({ error: "Car not found" });
+      }
+      return res.status(200).json(toClientCar(result.rows[0]));
+    }
+
     const updatedCars = await supabaseRequest(`${table}?id=eq.${encodeURIComponent(id)}`, {
       method: "PATCH",
       headers: {
@@ -161,6 +206,15 @@ export async function deleteCar(req, res) {
     const { id } = req.params;
     if (!id || id.length > 100) {
       return res.status(400).json({ error: "Invalid car ID" });
+    }
+
+    const pool = getPostgresPool();
+    if (pool) {
+      const result = await pool.query('DELETE FROM public.cars WHERE id = $1 RETURNING id;', [id]);
+      if (!result.rows.length) {
+        return res.status(404).json({ error: "Car not found" });
+      }
+      return res.status(200).json({ message: "Car deleted successfully" });
     }
 
     const deletedCars = await supabaseRequest(`${table}?id=eq.${encodeURIComponent(id)}`, {

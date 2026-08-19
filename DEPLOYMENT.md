@@ -8,13 +8,13 @@ Deploy the `BACKEND` folder as the backend service.
 
 Required environment variables:
 
-- `SUPABASE_URL`: Supabase project URL.
-- `SUPABASE_SERVICE_ROLE_KEY`: Supabase service role key. Keep this server-side only.
-- `SUPABASE_CARS_TABLE`: Optional. Defaults to `cars`.
-- `ADMIN_PASSWORD`: Password for the admin panel.
+- `DATABASE_URL`: Supabase Direct PostgreSQL Connection String (e.g., `postgresql://postgres:YOUR_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres`).
+- `SUPABASE_URL`: Optional. Supabase project URL (e.g., `https://YOUR_PROJECT_REF.supabase.co`).
+- `SUPABASE_SERVICE_ROLE_KEY`: Optional if `DATABASE_URL` is set.
+- `ADMIN_PASSWORD`: Password for the admin panel (`admin123bmm`).
 - `ADMIN_TOKEN_SECRET`: Long random string used to sign admin sessions.
 - `ADMIN_USERNAME`: Optional. Defaults to `admin`.
-- `CORS_ORIGIN`: Frontend URL. Use a comma-separated list for multiple origins.
+- `CORS_ORIGIN`: Frontend URL or `*`.
 
 Create this table in Supabase before starting the backend. The SQL is tracked in:
 
