@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FaFilter, FaPhone, FaWhatsapp, FaCog, FaSignOutAlt, FaCarSide, FaGasPump,
-  FaCogs, FaCalendarAlt, FaTimes, FaChevronDown, FaStar, FaPalette,
-  FaShareAlt, FaCalculator, FaCalendarCheck, FaSearch, FaSortAmountDown,
-  FaCheckCircle, FaShieldAlt, FaHandshake, FaRoad, FaCheck
+  FaFilter, FaPhone, FaWhatsapp, FaCog, FaSignOutAlt, FaCarSide,
+  FaChevronDown, FaStar, FaShareAlt, FaCalculator, FaCalendarCheck,
+  FaSearch, FaSortAmountDown, FaShieldAlt, FaHandshake, FaRoad, FaCheck
 } from 'react-icons/fa';
 import logo from './assets/logo.png';
 import AdminPanel from './AdminPanel';
