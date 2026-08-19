@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>BLUESEAL MOTOR MANAGER'S LTD (BMM) — Precision in Every Mile</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- React & Babel CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --black:        #060608;
+      --navy:         #0a0a0e;
+      --navy-2:       #111117;
+      --navy-3:       #1a1a23;
+      --red:          #e11d48;
+      --red-lt:       #f43f5e;
+      --red-dk:       #be123c;
+      --red-glow:     rgba(225, 29, 72, 0.4);
+      --gold:         #f59e0b;
+      --gold-lt:      #fbbf24;
+      --gold-dk:      #d97706;
+      --green:        #16a34a;
+      --wa:           #25D366;
+      --bg:           #f8fafc;
+      --surface:      #ffffff;
+      --border:       #e2e8f0;
+      --text:         #0f172a;
+      --text-2:       #475569;
+      --text-3:       #94a3b8;
+      --r-sm:         8px;
+      --r:            16px;
+      --r-lg:         24px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.08);
+      --shadow:       0 4px 24px rgba(0,0,0,.1);
+      --shadow-lg:    0 16px 48px rgba(0,0,0,.16);
+      --trans:        .2s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 1.25rem;
+      background: #000000;
+      box-shadow: 0 4px 24px rgba(0,0,0,.6);
+      border-bottom: 1.5px solid rgba(225, 29, 72, 0.35);
+      gap: .5rem;
+    }
+    .navbar-brand { display: flex; align-items: center; text-decoration: none; cursor: pointer; }
+    .navbar-logo  { height: 48px; width: auto; object-fit: contain; display: block; border-radius: 4px; }
+    .navbar-actions { display: flex; gap: .4rem; align-items: center; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      border: none; border-radius: var(--r-sm);
+      font-family: inherit; font-weight: 700; font-size: .875rem;
+      cursor: pointer; padding: .58rem 1.15rem; min-height: 42px;
+      transition: filter var(--trans), transform var(--trans), box-shadow var(--trans);
+      white-space: nowrap; line-height: 1; text-decoration: none;
+    }
+    .btn:active:not(:disabled) { transform: scale(.96); }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-primary   { background: var(--red); color: #ffffff; box-shadow: 0 4px 16px rgba(225,29,72,.35); }
+    .btn-primary:hover   { filter: brightness(1.12); box-shadow: 0 6px 22px rgba(225,29,72,.5); }
+    .btn-nav       { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.16); }
+    .btn-nav:hover { background: rgba(255,255,255,.18); }
+    .btn-nav.active { background: var(--red); color: #fff; border-color: var(--red-lt); box-shadow: 0 0 14px rgba(225,29,72,.45); }
+    .btn-success   { background: var(--green); color: #fff; }
+    .btn-success:hover { filter: brightness(1.1); }
+    .btn-wa        { background: var(--wa);    color: #fff; }
+    .btn-wa:hover  { filter: brightness(1.08); }
+    .btn-danger    { background: #dc2626;      color: #fff; }
+    .btn-danger:hover { filter: brightness(1.1); }
+    .btn-warning   { background: #f59e0b;      color: #fff; }
+    .btn-warning:hover { filter: brightness(1.1); }
+    .btn-ghost     { background: transparent; border: 1.5px solid var(--border); color: var(--text-2); }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-outline-red { background: transparent; border: 1.5px solid var(--red); color: var(--red); }
+    .btn-outline-red:hover { background: var(--red); color: #fff; box-shadow: 0 4px 16px rgba(225,29,72,.35); }
+    .btn-sm  { padding: .4rem .75rem; font-size: .8rem; min-height: 36px; }
+    .btn-lg  { padding: .85rem 1.6rem; font-size: 1rem; border-radius: var(--r); min-height: 48px; }
+
+    /* ── HERO ── */
+    .hero {
+      background: radial-gradient(circle at 50% 15%, #240c12 0%, #100b0e 50%, #050506 100%);
+      position: relative; overflow: hidden;
+      padding: clamp(2.4rem, 7.5vw, 5.2rem) 1rem clamp(1.8rem, 5.5vw, 4rem);
+      text-align: center;
+      border-bottom: 1.5px solid rgba(225, 29, 72, 0.2);
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e11d48' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: rgba(225,29,72,.14); border: 1px solid rgba(225,29,72,.35);
+      color: #ff4d6d; font-size: .82rem; font-weight: 800; letter-spacing: .6px;
+      text-transform: uppercase; padding: .35rem .95rem; border-radius: 20px;
+      margin-bottom: .95rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 6.5vw, 3.3rem);
+      font-weight: 900; color: #ffffff; line-height: 1.15;
+      letter-spacing: -.5px; margin-bottom: .85rem;
+    }
+    .hero h1 .brand-highlight {
+      color: var(--red);
+      font-style: italic;
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 0 0 25px rgba(225,29,72,.4);
+    }
+    .hero p { font-size: clamp(.875rem, 2.8vw, 1.05rem); color: rgba(255,255,255,.82); line-height: 1.55; max-width: 540px; margin: 0 auto 1.5rem; }
+    .hero-stats {
+      display: flex; justify-content: center; gap: clamp(.85rem, 4vw, 3rem);
+      margin-top: 1.85rem; flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-size: clamp(1.35rem, 4.5vw, 2rem); font-weight: 900; color: var(--red-lt); line-height: 1; text-shadow: 0 0 15px rgba(225,29,72,.3); }
+    .hero-stat-label { font-size: .72rem; color: rgba(255,255,255,.7); margin-top: .2rem; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+
+    /* ── MAIN WRAPPER ── */
+    .main-wrapper { max-width: 1160px; margin: 1.25rem auto; padding: 0 .85rem; display: flex; flex-direction: column; gap: 1rem; }
+
+    /* ── CATEGORY PILLS ── */
+    .category-pills { display: flex; gap: .5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: .25rem; }
+    .category-pill {
+      border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+      padding: .45rem .95rem; border-radius: 24px; font-size: .82rem; font-weight: 700;
+      white-space: nowrap; cursor: pointer; transition: all var(--trans);
+    }
+    .category-pill:hover { border-color: var(--red); color: var(--text); }
+    .category-pill.active { background: var(--red); color: #fff; border-color: var(--red-lt); box-shadow: 0 4px 14px rgba(225,29,72,.35); }
+
+    /* ── SEARCH & SORT ── */
+    .search-sort-container { display: flex; gap: .65rem; align-items: center; flex-wrap: wrap; }
+    .search-wrap {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: .75rem 1rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex; gap: .65rem; align-items: center;
+    }
+    .search-input {
+      flex: 1; padding: .65rem .85rem;
+      border-radius: var(--r-sm); border: 1.5px solid var(--border);
+      font-family: inherit; font-size: 16px;
+      background: var(--bg); color: var(--text);
+      outline: none; transition: border-color var(--trans), box-shadow var(--trans);
+      min-height: 44px;
+    }
+    .search-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,29,72,.15); }
+    .search-input::placeholder { color: var(--text-3); }
+
+    .sort-wrap {
+      display: flex; align-items: center; gap: .5rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--r); padding: .4rem .75rem;
+      height: 44px;
+    }
+    .sort-select {
+      border: none; background: transparent; font-family: inherit; font-size: .85rem;
+      color: var(--text); outline: none; cursor: pointer; font-weight: 600;
+    }
+
+    .badge-count {
+      position: absolute; top: -7px; right: -7px; background: var(--red);
+      color: #fff; border-radius: 50%; width: 18px; height: 18px;
+      font-size: .68rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── FILTER PANEL ── */
+    .filter-panel {
+      background: var(--surface);
+      border-radius: var(--r);
+      padding: 1.1rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .85rem; }
+    .filter-grid   { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+    .filter-select {
+      width: 100%; padding: .65rem .8rem;
+      border-radius: var(--r-sm); border: 1.5px solid var(--border);
+      background: var(--bg); font-family: inherit; font-size: 16px;
+      color: var(--text); cursor: pointer; outline: none;
+      transition: border-color var(--trans); min-height: 44px;
+    }
+    .filter-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,29,72,.12); }
+
+    /* ── CAR GRID ── */
+    .car-grid { display: grid; grid-template-columns: 1fr; gap: 1.15rem; }
+
+    /* ── CAR CARD ── */
+    .car-card {
+      background: var(--surface);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: box-shadow var(--trans), transform var(--trans);
+      display: flex; flex-direction: column;
+      cursor: default;
+    }
+    .car-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.12); transform: translateY(-3px); border-color: rgba(225,29,72,.2); }
+
+    .car-image-wrap { position: relative; background: var(--bg); overflow: hidden; }
+    .car-image { width: 100%; height: 210px; object-fit: cover; display: block; transition: transform .4s ease; cursor: pointer; }
+    .car-card:hover .car-image { transform: scale(1.03); }
+
+    .car-badge {
+      position: absolute; top: 10px; left: 10px;
+      padding: .25rem .65rem; border-radius: 20px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+    .car-badge--new  { background: rgba(22,163,74,.92);  color: #fff; }
+    .car-badge--used { background: rgba(225,29,72,.92); color: #fff; }
+
+    .car-img-counter {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,0,0,.7); color: #fff;
+      font-size: .7rem; font-weight: 700;
+      padding: .25rem .6rem; border-radius: 20px; backdrop-filter: blur(4px);
+    }
+
+    .btn-share-floating {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(0,0,0,.65); color: #fff; border: none;
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; backdrop-filter: blur(4px); transition: background var(--trans);
+    }
+    .btn-share-floating:hover { background: var(--red); }
+
+    .car-thumbs { display: flex; gap: 6px; padding: .55rem .75rem .45rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .car-thumb { flex-shrink: 0; width: 48px; height: 38px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2.5px solid transparent; opacity: .65; transition: border-color var(--trans), opacity var(--trans); }
+    .car-thumb.active { border-color: var(--red); opacity: 1; }
+
+    .car-body { padding: .85rem .85rem 1rem; flex: 1; display: flex; flex-direction: column; gap: .35rem; }
+    .car-title { font-size: 1.02rem; font-weight: 800; color: var(--text); line-height: 1.35; }
+    .car-price-wrap { display: flex; align-items: baseline; gap: .5rem; margin-top: .1rem; }
+    .car-price { font-size: 1.2rem; font-weight: 900; color: var(--text); letter-spacing: -.5px; }
+    .car-price-label { font-size: .75rem; font-weight: 600; color: var(--text-3); }
+
+    .car-meta { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
+    .car-pill {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .72rem; font-weight: 600; color: var(--text-2);
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 20px; padding: .22rem .6rem;
+    }
+    .car-pill i { color: var(--red); font-size: .75rem; }
+
+    .car-details-expanded {
+      margin-top: .65rem; padding: .8rem; background: var(--bg);
+      border-radius: var(--r-sm); border: 1px solid var(--border);
+      font-size: .82rem; color: var(--text-2);
+      display: grid; grid-template-columns: 1fr 1fr; gap: .4rem .75rem;
+    }
+    .car-details-expanded strong { color: var(--text-3); display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .4px; margin-bottom: .1rem; }
+    .car-details-expanded span { font-weight: 700; color: var(--text); }
+
+    .car-actions { display: grid; grid-template-columns: 1fr 1.15fr 1.15fr; gap: .4rem; margin-top: .85rem; }
+    .car-actions .btn { font-size: .8rem; padding: .65rem .35rem; border-radius: var(--r-sm); min-height: 42px; }
+
+    /* ── FLOATING WA BUTTON ── */
+    .fab-wa {
+      position: fixed; bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); right: 1.15rem; z-index: 800;
+      width: 56px; height: 56px;
+      background: var(--wa);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,.45);
+      color: #fff; font-size: 1.55rem; text-decoration: none;
+      transition: transform var(--trans), box-shadow var(--trans);
+    }
+    .fab-wa:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,.6); }
+
+    /* ── TOAST NOTIFICATION ── */
+    .toast-notification {
+      position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%); z-index: 9999;
+      background: #0f172a; color: #fff; border: 1px solid rgba(225,29,72,.4);
+      padding: .75rem 1.25rem; border-radius: 30px; font-size: .85rem; font-weight: 600;
+      display: flex; align-items: center; gap: .5rem; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    /* ── MODALS ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; z-index: 9999; cursor: zoom-out; padding: 1rem; }
+    .modal-img     { max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: var(--r-sm); cursor: default; }
+    .modal-close   { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px; background: rgba(255,255,255,.15); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { background: rgba(225,29,72,.7); }
+
+    .modal-card {
+      background: var(--surface); border-radius: var(--r-lg); padding: clamp(1.25rem, 4vw, 2rem);
+      width: 100%; max-width: 480px; box-shadow: var(--shadow-lg); cursor: default;
+      border: 1px solid var(--border);
+    }
+
+    .calc-group { margin-bottom: 1.15rem; }
+    .calc-range { width: 100%; height: 6px; border-radius: 4px; accent-color: var(--red); cursor: pointer; margin-top: .4rem; }
+    .calc-result-box {
+      background: #0a0a0e; color: #fff; border-radius: var(--r-sm); padding: 1.2rem;
+      text-align: center; border: 1px solid rgba(225,29,72,.3); margin: 1.15rem 0;
+    }
+
+    /* ── FOOTER ── */
+    .footer { background: #060608; color: #94a3b8; padding: 2.5rem 1rem 1.5rem; border-top: 1px solid rgba(225,29,72,.2); }
+    .footer-grid  { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1160px; margin: 0 auto; }
+    .footer h3 { font-size: .95rem; font-weight: 800; color: #fff; margin-bottom: .85rem; padding-bottom: .5rem; border-bottom: 2px solid var(--red); display: inline-block; }
+    .footer p  { margin-bottom: .4rem; line-height: 1.6; font-size: .875rem; }
+    .footer a  { color: #64748b; text-decoration: none; transition: color var(--trans); }
+    .footer a:hover { color: var(--red); }
+    .footer-bottom { max-width: 1160px; margin: 1.75rem auto 0; padding-top: 1.25rem; border-top: 1px solid #1a1a24; display: flex; flex-direction: column; align-items: center; gap: .75rem; font-size: .8rem; color: #475569; text-align: center; }
+
+    /* ── ADMIN STYLES ── */
+    .admin-wrap { max-width: 1000px; margin: 1.25rem auto; padding: 0 .85rem 4rem; }
+    .admin-card { background: var(--surface); border-radius: var(--r-lg); padding: 1.35rem; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .85rem; margin-bottom: 1.35rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .admin-tabs { display: flex; gap: .4rem; }
+    
+    .stats-bar { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin-bottom: 1.35rem; }
+    .stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .85rem; border-left: 4px solid var(--red); }
+    .stat-box-num { font-size: 1.25rem; font-weight: 900; color: var(--text); }
+    .stat-box-label { font-size: .7rem; color: var(--text-2); text-transform: uppercase; font-weight: 700; margin-top: .15rem; }
+
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .75rem; }
+    .form-label { font-size: .8rem; font-weight: 700; color: var(--text-2); display: block; margin-bottom: .25rem; }
+    .form-input, .form-select {
+      width: 100%; padding: .75rem .9rem;
+      border-radius: var(--r-sm); border: 1.5px solid var(--border);
+      font-family: inherit; font-size: 16px; color: var(--text);
+      background: var(--bg); outline: none; min-height: 44px;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,29,72,.12); }
+
+    .image-upload-zone { border: 2px dashed var(--border); border-radius: var(--r); padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: border-color var(--trans), background var(--trans); color: var(--text-2); display: block; }
+    .image-upload-zone:hover { border-color: var(--red); background: rgba(225,29,72,.03); }
+    .image-upload-zone input[type="file"] { display: none; }
+    .image-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: .6rem; margin-top: .75rem; }
+    .preview-item { position: relative; border-radius: var(--r-sm); overflow: hidden; aspect-ratio: 4/3; }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-remove { position: absolute; top: 4px; right: 4px; background: rgba(220,38,38,.9); color: #fff; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .85rem; }
+
+    .manage-list { display: flex; flex-direction: column; gap: .75rem; margin-top: 1rem; }
+    .manage-item {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .85rem;
+      display: flex; gap: .75rem; align-items: center;
+    }
+    .manage-item-img { width: 72px; height: 56px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+    .manage-item-info { flex: 1; min-width: 0; }
+    .manage-item-title { font-weight: 800; font-size: .92rem; color: var(--text); margin-bottom: .2rem; }
+    .manage-item-specs { font-size: .75rem; color: var(--text-2); margin-bottom: .2rem; }
+    .manage-item-price { font-weight: 900; color: var(--red); font-size: .88rem; }
+    .manage-item-actions { display: flex; gap: .4rem; flex-shrink: 0; }
+
+    /* ── LOGIN ── */
+    .login-wrap { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .login-card { background: var(--surface); border-radius: var(--r-lg); padding: clamp(1.5rem, 5vw, 2.5rem); box-shadow: var(--shadow-lg); width: 100%; max-width: 440px; border: 1px solid var(--border); }
+    .login-icon { width: 68px; height: 68px; border-radius: 20px; background: linear-gradient(135deg, #09090b, var(--red)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.15rem; box-shadow: 0 8px 24px rgba(225,29,72,.35); color: #fff; font-size: 1.75rem; }
+    .input-group { display: flex; align-items: center; gap: .75rem; border: 1.5px solid var(--border); border-radius: var(--r-sm); padding: .75rem .9rem; background: var(--bg); }
+    .input-group:focus-within { border-color: var(--red); box-shadow: 0 0 0 3px rgba(225,29,72,.12); }
+    .input-group input { border: none; background: transparent; outline: none; flex: 1; font-family: inherit; font-size: 16px; color: var(--text); }
+    .input-group i { color: var(--text-3); font-size: 1rem; }
+
+    .alert { padding: .75rem .9rem; border-radius: var(--r-sm); font-size: .85rem; font-weight: 600; margin-bottom: 1rem; }
+    .alert-success { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+    .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+
+    /* ── RESPONSIVE RULES ── */
+    @media (max-width: 640px) {
+      .navbar { padding: .5rem .75rem; }
+      .navbar-logo { height: 40px; }
+      .navbar-actions .btn { padding: .45rem .65rem; font-size: .78rem; min-height: 38px; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .hero-ctas .btn { width: 100%; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .admin-header { flex-direction: column; align-items: stretch; }
+      .admin-tabs { width: 100%; }
+      .admin-tabs .btn { flex: 1; }
+      .manage-item { flex-direction: column; align-items: stretch; text-align: left; }
+      .manage-item-img { width: 100%; height: 140px; }
+      .manage-item-actions { width: 100%; }
+      .manage-item-actions .btn { flex: 1; }
+    }
+
+    @media (min-width: 641px) {
+      .car-grid    { grid-template-columns: repeat(2, 1fr); }
+      .filter-grid { grid-template-columns: repeat(4, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; }
+      .stats-bar   { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .car-grid    { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const CONTACT = '0733493804';
+    const WA_NUM  = `254${CONTACT.replace(/^0/, '')}`;
+    const EMAIL   = 'bluesealmotormanagers@gmail.com';
+    const LOCATION = 'Kiambu Road, Nairobi, Kenya';
+    const LOGO_SRC = './FRONTEND/src/assets/logo.png';
+
+    const CATEGORIES = ['All Vehicles', 'SUVs & 4x4', 'Sedans & Saloons', 'Luxury & Sports', 'Commercial'];
+
+    const INITIAL_CARS = [
+      {
+        id: '1',
+        title: '2021 Toyota Land Cruiser Prado TX-L',
+        brand: 'Toyota',
+        model: 'Land Cruiser Prado TX-L',
+        year: 2021,
+        price: 7850000,
+        fuelType: 'Diesel',
+        transmission: 'Automatic',
+        color: 'Pearl White',
+        condition: 'Used',
+        status: 'Available',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80'
+        ]
+      },
+      {
+        id: '2',
+        title: '2020 Mercedes-Benz C200 AMG Line',
+        brand: 'Mercedes-Benz',
+        model: 'C200 AMG Line',
+        year: 2020,
+        price: 4950000,
+        fuelType: 'Petrol',
+        transmission: 'Automatic',
+        color: 'Obsidian Black',
+        condition: 'Used',
+        status: 'Available',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&auto=format&fit=crop&q=80'
+        ]
+      },
+      {
+        id: '3',
+        title: '2022 Range Rover Sport HSE Dynamic',
+        brand: 'Land Rover',
+        model: 'Range Rover Sport HSE',
+        year: 2022,
+        price: 14200000,
+        fuelType: 'Petrol',
+        transmission: 'Automatic',
+        color: 'Firenze Red',
+        condition: 'Used',
+        status: 'Featured',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop&q=80'
+        ]
+      },
+      {
+        id: '4',
+        title: '2021 BMW 320i M-Sport',
+        brand: 'BMW',
+        model: '320i M-Sport',
+        year: 2021,
+        price: 5200000,
+        fuelType: 'Petrol',
+        transmission: 'Automatic',
+        color: 'Portimao Blue',
+        condition: 'Used',
+        status: 'Available',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&auto=format&fit=crop&q=80'
+        ]
+      },
+      {
+        id: '5',
+        title: '2020 Mazda CX-5 2.2D AWD Luxury',
+        brand: 'Mazda',
+        model: 'CX-5 2.2D Luxury',
+        year: 2020,
+        price: 3650000,
+        fuelType: 'Diesel',
+        transmission: 'Automatic',
+        color: 'Soul Red Crystal',
+        condition: 'Used',
+        status: 'Reserved',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&auto=format&fit=crop&q=80'
+        ]
+      },
+      {
+        id: '6',
+        title: '2023 Subaru Outback Limited XT',
+        brand: 'Subaru',
+        model: 'Outback Limited XT',
+        year: 2023,
+        price: 5900000,
+        fuelType: 'Petrol',
+        transmission: 'Automatic',
+        color: 'Magnetite Gray',
+        condition: 'New',
+        status: 'Available',
+        contactNumber: CONTACT,
+        images: [
+          'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&auto=format&fit=crop&q=80'
+        ]
+      }
+    ];
+
+    function App() {
+      const [cars, setCars] = useState(() => {
+        const saved = localStorage.getItem('bluesealCars');
+        return saved ? JSON.parse(saved) : INITIAL_CARS;
+      });
+      const [showAdmin, setShowAdmin] = useState(false);
+      const [isAuthenticated, setIsAuthenticated] = useState(false);
+      const [adminTab, setAdminTab] = useState('manage');
+      const [editingCar, setEditingCar] = useState(null);
+      const [notification, setNotification] = useState('');
+      const [toastMsg, setToastMsg] = useState('');
+      const [loginError, setLoginError] = useState('');
+      const [loginCreds, setLoginCreds] = useState({ username: 'admin', password: 'admin123bmm' });
+      const [adminSearch, setAdminSearch] = useState('');
+
+      const [formData, setFormData] = useState({
+        brand: '', model: '', year: new Date().getFullYear(),
+        price: '', fuelType: 'Petrol', transmission: 'Automatic',
+        color: '', condition: 'Used', status: 'Available', contactNumber: CONTACT,
+        images: []
+      });
+
+      const [filters, setFilters] = useState({ searchTerm: '', fuelFilter: '', yearFilter: '', transmissionFilter: '', colorFilter: '' });
+      const [activeCategory, setActiveCategory] = useState('All Vehicles');
+      const [sortBy, setSortBy] = useState('featured');
+      const [showFilters, setShowFilters] = useState(false);
+      const [expandedCardId, setExpandedCardId] = useState(null);
+      const [selectedImgIdx, setSelectedImgIdx] = useState({});
+      const [fullscreenImg, setFullscreenImg] = useState(null);
+
+      // Advanced tools state
+      const [calculatorCar, setCalculatorCar] = useState(null);
+      const [testDriveCar, setTestDriveCar] = useState(null);
+      const [testDriveForm, setTestDriveForm] = useState({ name: '', phone: '', date: '', time: 'Morning (10:00 AM - 1:00 PM)' });
+      const [depositPct, setDepositPct] = useState(20);
+      const [loanMonths, setLoanMonths] = useState(36);
+
+      useEffect(() => {
+        localStorage.setItem('bluesealCars', JSON.stringify(cars));
+      }, [cars]);
+
+      const notify = (msg) => {
+        setNotification(msg);
+        setTimeout(() => setNotification(''), 4000);
+      };
+
+      const showToast = (msg) => {
+        setToastMsg(msg);
+        setTimeout(() => setToastMsg(''), 3500);
+      };
+
+      const handleLoginSubmit = (e) => {
+        e.preventDefault();
+        if (loginCreds.password === 'admin123bmm' && (loginCreds.username.toLowerCase() === 'admin' || loginCreds.username.toLowerCase() === 'blueseal')) {
+          setLoginError('');
+          setIsAuthenticated(true);
+        } else {
+          setLoginError('Invalid credentials. Password is admin123bmm');
+        }
+      };
+
+      const handleFormChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+      };
+
+      // Multi-image upload support up to 5 photos
+      const handleImageFiles = (e) => {
+        const files = Array.from(e.target.files).slice(0, 5);
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            setFormData(prev => ({
+              ...prev,
+              images: [...prev.images, ev.target.result].slice(0, 5)
+            }));
+          };
+          reader.readAsDataURL(file);
+        });
+      };
+
+      const removeFormImage = (idx) => {
+        setFormData(prev => ({
+          ...prev,
+          images: prev.images.filter((_, i) => i !== idx)
+        }));
+      };
+
+      const handleSaveCar = (e) => {
+        e.preventDefault();
+        const fallbackImg = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&auto=format&fit=crop&q=80';
+        const autoTitle = `${formData.year ? formData.year + ' ' : ''}${formData.brand} ${formData.model}`.trim();
+        
+        const carPayload = {
+          ...formData,
+          title: autoTitle,
+          price: Number(formData.price),
+          year: Number(formData.year),
+          images: formData.images.length > 0 ? formData.images : [fallbackImg]
+        };
+
+        if (editingCar) {
+          setCars(prev => prev.map(c => c.id === editingCar.id ? { ...carPayload, id: editingCar.id } : c));
+          notify(`Vehicle "${carPayload.title}" updated successfully!`);
+        } else {
+          const newCar = { ...carPayload, id: Date.now().toString() };
+          setCars(prev => [newCar, ...prev]);
+          notify(`New vehicle "${newCar.title}" added to showroom!`);
+        }
+
+        resetForm();
+        setAdminTab('manage');
+      };
+
+      const handleEditCar = (car) => {
+        setEditingCar(car);
+        setFormData({ ...car });
+        setAdminTab('add');
+      };
+
+      const handleDeleteCar = (id, title) => {
+        if (window.confirm(`Are you sure you want to delete "${title}" from inventory?`)) {
+          setCars(prev => prev.filter(c => c.id !== id));
+          notify(`Vehicle "${title}" removed from inventory.`);
+        }
+      };
+
+      const resetForm = () => {
+        setEditingCar(null);
+        setFormData({
+          brand: '', model: '', year: new Date().getFullYear(),
+          price: '', fuelType: 'Petrol', transmission: 'Automatic',
+          color: '', condition: 'Used', status: 'Available', contactNumber: CONTACT,
+          images: []
+        });
+      };
+
+      const handleExportCSV = () => {
+        if (!cars.length) return;
+        const headers = ['Title', 'Brand', 'Model', 'Year', 'Price_KES', 'Fuel', 'Transmission', 'Color', 'Condition', 'Status'];
+        const rows = cars.map(c => [
+          `"${c.title}"`, `"${c.brand}"`, `"${c.model}"`, c.year, c.price,
+          `"${c.fuelType}"`, `"${c.transmission}"`, `"${c.color}"`, `"${c.condition}"`, `"${c.status || 'Available'}"`
+        ]);
+        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const link = document.createElement('a');
+        link.setAttribute('href', encodeURI(csvContent));
+        link.setAttribute('download', `BMM_KiambuRoad_Stock_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('Inventory report downloaded!');
+      };
+
+      const handleShare = (car) => {
+        const shareData = {
+          title: `${car.title} — Blue Seal Motor Managers Ltd`,
+          text: `Check out this ${car.title} for KES ${car.price?.toLocaleString()} at Blue Seal Motor Managers Ltd (Kiambu Road, Nairobi)!`,
+          url: window.location.href
+        };
+        if (navigator.share) {
+          navigator.share(shareData).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText(`${shareData.text} ${shareData.url}`);
+          showToast('Vehicle link copied to clipboard!');
+        }
+      };
+
+      const handleTestDriveSubmit = (e) => {
+        e.preventDefault();
+        if (!testDriveCar) return;
+        const msg = encodeURIComponent(`Hello Blue Seal Motor Managers Ltd (BMM), I would like to schedule a Test Drive for the ${testDriveCar.title} (KES ${testDriveCar.price?.toLocaleString()}) on ${testDriveForm.date || 'upcoming date'} (${testDriveForm.time}). My Name: ${testDriveForm.name}, Phone: ${testDriveForm.phone}.`);
+        window.open(`https://wa.me/${WA_NUM}?text=${msg}`, '_blank');
+        setTestDriveCar(null);
+        showToast('Test drive request sent to WhatsApp!');
+      };
+
+      const totalInventoryValue = cars.reduce((acc, c) => acc + (Number(c.price) || 0), 0);
+      const availableCount = cars.filter(c => c.status !== 'Sold').length;
+
+      const setFilter = (k, v) => setFilters(p => ({ ...p, [k]: v }));
+      const clearFilters = () => setFilters({ searchTerm: '', fuelFilter: '', yearFilter: '', transmissionFilter: '', colorFilter: '' });
+
+      const filtered = cars.filter(c => {
+        const q = filters.searchTerm.toLowerCase();
+        const matchesSearch = (!q || [c.title, c.brand, c.model, c.color].some(f => f?.toLowerCase().includes(q)));
+        const matchesFuel   = (!filters.fuelFilter         || c.fuelType     === filters.fuelFilter);
+        const matchesYear   = (!filters.yearFilter         || c.year?.toString() === filters.yearFilter);
+        const matchesTrans  = (!filters.transmissionFilter || c.transmission === filters.transmissionFilter);
+        const matchesColor  = (!filters.colorFilter        || c.color?.toLowerCase() === filters.colorFilter.toLowerCase());
+
+        let matchesCategory = true;
+        if (activeCategory === 'SUVs & 4x4') {
+          matchesCategory = ['prado', 'land cruiser', 'range rover', 'cx-5', 'cx-8', 'patrol', 'harrier', 'rav4', 'outback', 'suv', '4x4'].some(k => `${c.title} ${c.model}`.toLowerCase().includes(k));
+        } else if (activeCategory === 'Sedans & Saloons') {
+          matchesCategory = ['c200', 'c300', 'e-class', '320i', '520i', 'premio', 'allion', 'axio', 'camry', 'mercedes', 'bmw', 'sedan'].some(k => `${c.title} ${c.model}`.toLowerCase().includes(k));
+        } else if (activeCategory === 'Luxury & Sports') {
+          matchesCategory = (c.price >= 5000000) || ['amg', 'm-sport', 'range rover', 'porsche', 'lexus', 'hse'].some(k => `${c.title} ${c.model}`.toLowerCase().includes(k));
+        } else if (activeCategory === 'Commercial') {
+          matchesCategory = ['hilux', 'd-max', 'ranger', 'canter', 'probox', 'hiace', 'pickup', 'commercial'].some(k => `${c.title} ${c.model}`.toLowerCase().includes(k));
+        }
+
+        return matchesSearch && matchesFuel && matchesYear && matchesTrans && matchesColor && matchesCategory;
+      }).sort((a, b) => {
+        if (sortBy === 'price-low') return (Number(a.price) || 0) - (Number(b.price) || 0);
+        if (sortBy === 'price-high') return (Number(b.price) || 0) - (Number(a.price) || 0);
+        if (sortBy === 'year-new') return (Number(b.year) || 0) - (Number(a.year) || 0);
+        return 0;
+      });
+
+      const filteredAdminCars = cars.filter(c => {
+        const q = adminSearch.toLowerCase();
+        return !q || [c.title, c.brand, c.model, c.color, c.status, c.year?.toString()].some(f => f?.toLowerCase().includes(q));
+      });
+
+      const uniq = f => [...new Set(cars.map(c => c[f]).filter(Boolean))].sort();
+      const activeFltCount = [filters.fuelFilter, filters.yearFilter, filters.transmissionFilter, filters.colorFilter].filter(Boolean).length;
+
+      // Financing calculation
+      const calcPrice = calculatorCar?.price || 5000000;
+      const depositAmount = (calcPrice * depositPct) / 100;
+      const principal = calcPrice - depositAmount;
+      const monthlyRate = (13.5 / 100) / 12;
+      const monthlyPayment = principal > 0
+        ? Math.round((principal * monthlyRate * Math.pow(1 + monthlyRate, loanMonths)) / (Math.pow(1 + monthlyRate, loanMonths) - 1))
+        : 0;
+
+      return (
+        <div>
+          {/* Toast Notification */}
+          {toastMsg && (
+            <div className="toast-notification">
+              <i className="fa-solid fa-circle-check" style={{ color: '#10b981' }}></i>
+              <span>{toastMsg}</span>
+            </div>
+          )}
+
+          {/* Navbar */}
+          <nav className="navbar">
+            <div className="navbar-brand" onClick={() => setShowAdmin(false)}>
+              <img src={LOGO_SRC} alt="BLUESEAL MOTOR MANAGER'S LTD (BMM)" className="navbar-logo" onError={(e) => { e.target.style.display = 'none'; document.getElementById('alt-brand').style.display = 'block'; }} />
+              <div id="alt-brand" style={{ display: 'none', color: '#fff', fontWeight: 900, fontSize: '1.1rem', fontStyle: 'italic' }}>
+                <span style={{ color: 'var(--red)' }}>BLUESEAL</span> BMM
+              </div>
+            </div>
+            <div className="navbar-actions">
+              <button onClick={() => setShowAdmin(false)} className={`btn btn-nav ${!showAdmin ? 'active' : ''}`} title="View public car showroom">
+                <i className="fa-solid fa-car-side"></i> <span>Showroom</span>
+              </button>
+              
+              <button 
+                onClick={() => setShowAdmin(true)} 
+                className={`btn ${showAdmin ? 'btn-primary' : 'btn-outline-red'}`} 
+                title="Log into Dealership Admin Panel"
+                style={{ fontWeight: 800 }}
+              >
+                <i className={`fa-solid ${isAuthenticated ? 'fa-gauge-high' : 'fa-lock'}`}></i> 
+                <span>{isAuthenticated ? 'Admin' : 'Login'}</span>
+              </button>
+
+              {isAuthenticated && showAdmin && (
+                <button onClick={() => { setIsAuthenticated(false); setShowAdmin(false); }} className="btn btn-danger btn-sm" title="Log out from Admin">
+                  <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+              )}
+            </div>
+          </nav>
+
+          {/* View Conditional: Admin vs Showroom */}
+          {showAdmin ? (
+            !isAuthenticated ? (
+              /* Admin Login Form */
+              <div className="login-wrap">
+                <div className="login-card">
+                  <div className="login-icon">
+                    <i className="fa-solid fa-shield-halved"></i>
+                  </div>
+                  <h2 style={{ textAlign: 'center', fontSize: '1.35rem', fontWeight: 900, marginBottom: '.35rem' }}>Dealer Admin Login</h2>
+                  <p style={{ textAlign: 'center', color: 'var(--text-2)', fontSize: '.85rem', marginBottom: '1.5rem' }}>
+                    BLUESEAL MOTOR MANAGER'S LTD (BMM) · Kiambu Road
+                  </p>
+                  
+                  {loginError && (
+                    <div className="alert alert-error" style={{ marginBottom: '1rem' }}>
+                      <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: '.4rem' }}></i> {loginError}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleLoginSubmit}>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <label className="form-label">Admin Username</label>
+                      <div className="input-group">
+                        <i className="fa-solid fa-user"></i>
+                        <input 
+                          type="text" 
+                          value={loginCreds.username} 
+                          onChange={e => { setLoginError(''); setLoginCreds(p => ({ ...p, username: e.target.value })); }}
+                          placeholder="admin"
+                          required 
+                        />
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: '1.35rem' }}>
+                      <label className="form-label">Password</label>
+                      <div className="input-group">
+                        <i className="fa-solid fa-lock"></i>
+                        <input 
+                          type="password" 
+                          value={loginCreds.password} 
+                          onChange={e => { setLoginError(''); setLoginCreds(p => ({ ...p, password: e.target.value })); }}
+                          placeholder="admin123bmm"
+                          required 
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginBottom: '.65rem' }}>
+                      <i className="fa-solid fa-right-to-bracket"></i> Sign In to Admin Panel
+                    </button>
+
+                    <button 
+                      type="button" 
+                      onClick={() => { setLoginCreds({ username: 'admin', password: 'admin123bmm' }); setLoginError(''); setIsAuthenticated(true); }} 
+                      className="btn btn-ghost btn-sm" 
+                      style={{ width: '100%', color: 'var(--red)', borderColor: 'var(--red)' }}
+                    >
+                      <i className="fa-solid fa-bolt"></i> Quick Auto-Fill &amp; Sign-In
+                    </button>
+                  </form>
+
+                  <div style={{ textAlign: 'center', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
+                    <button onClick={() => setShowAdmin(false)} className="btn btn-ghost btn-sm" style={{ width: '100%' }}>
+                      <i className="fa-solid fa-arrow-left"></i> Return to Showroom
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Admin Dashboard */
+              <div className="admin-wrap">
+                <div className="admin-card">
+                  {/* Header */}
+                  <div className="admin-header">
+                    <div>
+                      <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--text)' }}>
+                        <i className="fa-solid fa-gauge-high" style={{ color: 'var(--red)', marginRight: '.45rem' }}></i>
+                        Inventory Management
+                      </h2>
+                      <p style={{ color: 'var(--text-2)', fontSize: '.82rem', marginTop: '.2rem' }}>
+                        Blue Seal Motor Managers Ltd · Kiambu Road Showroom
+                      </p>
+                    </div>
+                    <div className="admin-tabs">
+                      <button onClick={() => setAdminTab('manage')} className={`btn ${adminTab === 'manage' ? 'btn-primary' : 'btn-ghost'}`}>
+                        <i className="fa-solid fa-list-check"></i> Manage ({cars.length})
+                      </button>
+                      <button onClick={() => { resetForm(); setAdminTab('add'); }} className={`btn ${adminTab === 'add' ? 'btn-primary' : 'btn-ghost'}`}>
+                        <i className="fa-solid fa-plus"></i> {editingCar ? 'Edit Car' : 'Add Car'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Notification */}
+                  {notification && (
+                    <div className="alert alert-success">
+                      <i className="fa-solid fa-circle-check" style={{ marginRight: '.4rem' }}></i> {notification}
+                    </div>
+                  )}
+
+                  {/* Stats Bar */}
+                  <div className="stats-bar">
+                    <div className="stat-box">
+                      <div className="stat-box-num">{cars.length}</div>
+                      <div className="stat-box-label">Total Stock</div>
+                    </div>
+                    <div className="stat-box">
+                      <div className="stat-box-num">KES {(totalInventoryValue / 1000000).toFixed(1)}M</div>
+                      <div className="stat-box-label">Total Valuation</div>
+                    </div>
+                    <div className="stat-box">
+                      <div className="stat-box-num" style={{ color: 'var(--green)' }}>{availableCount}</div>
+                      <div className="stat-box-label">Available</div>
+                    </div>
+                    <div className="stat-box">
+                      <div className="stat-box-num" style={{ color: 'var(--gold)' }}>{cars.filter(c => c.status === 'Reserved').length}</div>
+                      <div className="stat-box-label">Reserved</div>
+                    </div>
+                  </div>
+
+                  {/* Tab 1: Manage Inventory */}
+                  {adminTab === 'manage' && (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.85rem', flexWrap: 'wrap', gap: '.5rem' }}>
+                        <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+                          <i className="fa-solid fa-magnifying-glass" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }}></i>
+                          <input
+                            type="search"
+                            placeholder="Filter stock by make, model, year…"
+                            value={adminSearch}
+                            onChange={e => setAdminSearch(e.target.value)}
+                            className="form-input"
+                            style={{ paddingLeft: '34px', fontSize: '.88rem' }}
+                          />
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '.4rem' }}>
+                          <button onClick={handleExportCSV} className="btn btn-ghost btn-sm" title="Export Inventory CSV Report">
+                            <i className="fa-solid fa-file-arrow-down"></i> Export CSV
+                          </button>
+                          <button onClick={() => { resetForm(); setAdminTab('add'); }} className="btn btn-primary btn-sm">
+                            <i className="fa-solid fa-plus"></i> Add Car
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="manage-list">
+                        {filteredAdminCars.map(car => (
+                          <div key={car.id} className="manage-item">
+                            <img src={car.images[0]} alt={car.brand} className="manage-item-img" />
+                            <div className="manage-item-info">
+                              <div className="manage-item-title">{car.brand} {car.model} ({car.year})</div>
+                              <div className="manage-item-specs">{car.fuelType} · {car.transmission} · {car.color}</div>
+                              <div className="manage-item-price">KES {car.price?.toLocaleString()}</div>
+                            </div>
+                            <div className="manage-item-actions">
+                              <button onClick={() => handleEditCar(car)} className="btn btn-ghost btn-sm" title="Edit Vehicle Details">
+                                <i className="fa-solid fa-pen-to-square" style={{ color: 'var(--gold-dk)' }}></i> Edit
+                              </button>
+                              <button onClick={() => handleDeleteCar(car.id, `${car.brand} ${car.model}`)} className="btn btn-danger btn-sm" title="Delete from Inventory">
+                                <i className="fa-solid fa-trash"></i>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        {filteredAdminCars.length === 0 && (
+                          <p style={{ color: 'var(--text-3)', textAlign: 'center', padding: '2rem' }}>
+                            No vehicles match your search.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tab 2: Add Car Form (No Vehicle Title Input, No Mileage Input, Max 5 Photos) */}
+                  {adminTab === 'add' && (
+                    <form onSubmit={handleSaveCar}>
+                      {editingCar && (
+                        <div className="alert" style={{ background: 'rgba(245,158,11,.12)', color: '#b45309', border: '1px solid #fde68a' }}>
+                          <i className="fa-solid fa-pen"></i> Editing: <strong>{editingCar.brand} {editingCar.model} ({editingCar.year})</strong>
+                        </div>
+                      )}
+
+                      <div className="form-grid-2">
+                        <div>
+                          <label className="form-label">Brand / Make *</label>
+                          <input name="brand" value={formData.brand} onChange={handleFormChange} placeholder="e.g. Toyota, Mercedes-Benz, BMW, Land Rover" required className="form-input" />
+                        </div>
+                        <div>
+                          <label className="form-label">Model *</label>
+                          <input name="model" value={formData.model} onChange={handleFormChange} placeholder="e.g. Prado TX, C200 AMG, Range Rover Sport" required className="form-input" />
+                        </div>
+                      </div>
+
+                      <div className="form-grid-2">
+                        <div>
+                          <label className="form-label">Year of Manufacture *</label>
+                          <input name="year" type="number" min="1990" max="2027" value={formData.year} onChange={handleFormChange} required className="form-input" />
+                        </div>
+                        <div>
+                          <label className="form-label">Price (KES) *</label>
+                          <input name="price" type="number" min="0" value={formData.price} onChange={handleFormChange} placeholder="e.g. 4850000" required className="form-input" />
+                        </div>
+                      </div>
+
+                      <div className="form-grid-2">
+                        <div>
+                          <label className="form-label">Fuel Type *</label>
+                          <select name="fuelType" value={formData.fuelType} onChange={handleFormChange} className="form-select">
+                            <option>Petrol</option>
+                            <option>Diesel</option>
+                            <option>Hybrid</option>
+                            <option>Electric</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="form-label">Transmission *</label>
+                          <select name="transmission" value={formData.transmission} onChange={handleFormChange} className="form-select">
+                            <option>Automatic</option>
+                            <option>Manual</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="form-grid-2">
+                        <div>
+                          <label className="form-label">Exterior Color *</label>
+                          <input name="color" value={formData.color} onChange={handleFormChange} placeholder="e.g. Pearl White, Obsidian Black, Firenze Red" required className="form-input" />
+                        </div>
+                        <div>
+                          <label className="form-label">Listing Status / Condition *</label>
+                          <select name="status" value={formData.status} onChange={handleFormChange} className="form-select">
+                            <option value="Available">Available for Sale</option>
+                            <option value="Featured">Featured Spotlight</option>
+                            <option value="Reserved">Reserved / Under Deal</option>
+                            <option value="Sold">Sold</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Image Upload Zone - Up to 5 Images */}
+                      <div style={{ marginBottom: '1.35rem', marginTop: '.5rem' }}>
+                        <label className="form-label">Vehicle Photos (Up to 5 images)</label>
+                        <label className="image-upload-zone">
+                          <input type="file" multiple accept="image/*" onChange={handleImageFiles} />
+                          <div>
+                            <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: '1.85rem', color: 'var(--red)', marginBottom: '.4rem' }}></i>
+                            <div style={{ fontWeight: 800, fontSize: '.92rem' }}>Tap or click to upload vehicle photos</div>
+                            <div style={{ fontSize: '.75rem', color: 'var(--text-3)', marginTop: '.2rem' }}>Supports JPG, PNG, WebP — up to 5 photos</div>
+                          </div>
+                        </label>
+
+                        {formData.images.length > 0 && (
+                          <div className="image-previews">
+                            {formData.images.map((src, i) => (
+                              <div key={i} className="preview-item">
+                                <img src={src} alt={`Preview ${i + 1}`} />
+                                <button type="button" onClick={() => removeFormImage(i)} className="preview-remove">✕</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action buttons */}
+                      <div style={{ display: 'flex', gap: '.65rem', flexDirection: 'column' }}>
+                        <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
+                          <i className="fa-solid fa-floppy-disk"></i> {editingCar ? 'Update Car' : 'Add Car to Showroom'}
+                        </button>
+                        <button type="button" onClick={() => { resetForm(); setAdminTab('manage'); }} className="btn btn-ghost btn-lg" style={{ width: '100%' }}>
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              </div>
+            )
+          ) : (
+            /* Showroom View */
+            <>
+              {/* Hero */}
+              <section className="hero">
+                <div className="hero-content">
+                  <div className="hero-eyebrow">
+                    <i className="fa-solid fa-bolt" style={{ color: '#ff4d6d' }}></i> Precision in every mile · Kiambu Road
+                  </div>
+                  <h1>
+                    Drive Excellence with <br />
+                    <span className="brand-highlight">BLUESEAL</span> <span style={{ color: '#fff' }}>MOTOR MANAGER'S LTD</span>
+                  </h1>
+                  <p>Nairobi's premier auto dealership &amp; vehicle managers located along Kiambu Road. Handpicked certified new and quality pre-owned vehicles at competitive market prices.</p>
+                  <div className="hero-ctas" style={{ display: 'flex', gap: '.65rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <a href={`https://wa.me/${WA_NUM}?text=${encodeURIComponent('Hi Blue Seal Motor Managers (BMM), I would like to enquire about your available vehicles on Kiambu Road.')}`} target="_blank" className="btn btn-primary btn-lg">
+                      <i className="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+                    </a>
+                    <a href={`tel:${CONTACT}`} className="btn btn-outline-red btn-lg">
+                      <i className="fa-solid fa-phone"></i> Call Showroom
+                    </a>
+                    <button onClick={() => setCalculatorCar(cars[0] || { title: 'Selected Vehicle', price: 5000000 })} className="btn btn-ghost btn-lg" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.25)' }}>
+                      <i className="fa-solid fa-calculator"></i> Loan Estimator
+                    </button>
+                  </div>
+                  <div className="hero-stats">
+                    <div className="hero-stat"><div className="hero-stat-num">{cars.length}+</div><div className="hero-stat-label">Cars Available</div></div>
+                    <div className="hero-stat"><div className="hero-stat-num">100%</div><div className="hero-stat-label">Certified Quality</div></div>
+                    <div className="hero-stat"><div className="hero-stat-num">Kiambu Rd</div><div className="hero-stat-label">Prime Showroom</div></div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Main Showroom Grid */}
+              <div className="main-wrapper" id="inventory">
+
+                {/* Category Pills */}
+                <div className="category-pills">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`category-pill ${activeCategory === cat ? 'active' : ''}`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Search and Sort Toolbar */}
+                <div className="search-sort-container">
+                  <div className="search-wrap" style={{ flex: 1 }}>
+                    <i className="fa-solid fa-magnifying-glass" style={{ color: 'var(--red)', fontSize: '1.05rem' }}></i>
+                    <input
+                      type="search"
+                      className="search-input"
+                      value={filters.searchTerm}
+                      onChange={e => setFilter('searchTerm', e.target.value)}
+                      placeholder="Search make, model, Prado, C200, Range Rover…"
+                    />
+                    <button onClick={() => setShowFilters(v => !v)} className={`btn ${showFilters || activeFltCount ? 'btn-primary' : 'btn-ghost'}`}>
+                      <i className="fa-solid fa-sliders"></i> {activeFltCount > 0 ? `(${activeFltCount})` : 'Filters'}
+                    </button>
+                  </div>
+
+                  <div className="sort-wrap">
+                    <i className="fa-solid fa-arrow-down-short-wide" style={{ color: 'var(--text-3)' }}></i>
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="sort-select">
+                      <option value="featured">Featured First</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="year-new">Year: Newest First</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Filters */}
+                {showFilters && (
+                  <div className="filter-panel">
+                    <div className="filter-header">
+                      <strong style={{ fontSize: '.9rem' }}>Refine Vehicles</strong>
+                      {activeFltCount > 0 && <button onClick={clearFilters} className="btn btn-danger btn-sm"><i className="fa-solid fa-xmark"></i> Reset</button>}
+                    </div>
+                    <div className="filter-grid">
+                      <select className="filter-select" value={filters.fuelFilter} onChange={e => setFilter('fuelFilter', e.target.value)}>
+                        <option value="">⛽ All Fuels</option>
+                        {uniq('fuelType').map(o => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                      <select className="filter-select" value={filters.yearFilter} onChange={e => setFilter('yearFilter', e.target.value)}>
+                        <option value="">📅 All Years</option>
+                        {uniq('year').map(o => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                      <select className="filter-select" value={filters.transmissionFilter} onChange={e => setFilter('transmissionFilter', e.target.value)}>
+                        <option value="">⚙️ All Transmissions</option>
+                        {uniq('transmission').map(o => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                      <select className="filter-select" value={filters.colorFilter} onChange={e => setFilter('colorFilter', e.target.value)}>
+                        <option value="">🎨 All Colors</option>
+                        {uniq('color').map(o => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <p className="results-count">{filtered.length} vehicle{filtered.length !== 1 ? 's' : ''} available</p>
+                  {activeCategory !== 'All Vehicles' && (
+                    <span style={{ fontSize: '.8rem', color: 'var(--red)', fontWeight: 700 }}>
+                      Category: {activeCategory}
+                    </span>
+                  )}
+                </div>
+
+                {/* Grid */}
+                <div className="car-grid">
+                  {filtered.map(car => {
+                    const imgIdx = selectedImgIdx[car.id] || 0;
+                    const img = car.images[imgIdx] || car.images[0];
+                    const exp = expandedCardId === car.id;
+                    const waMsg = encodeURIComponent(`Hi Blue Seal Motor Managers (BMM), I'm interested in the ${car.title} listed at KES ${car.price?.toLocaleString()}. Is it available at your Kiambu Road showroom?`);
+
+                    return (
+                      <div key={car.id} className="car-card">
+                        <div className="car-image-wrap">
+                          <img src={img} alt={car.title} className="car-image" onClick={() => setFullscreenImg(img)} />
+                          <span className={`car-badge car-badge--${car.condition === 'New' ? 'new' : 'used'}`}>{car.condition}</span>
+                          {car.images.length > 1 && <span className="car-img-counter">{imgIdx + 1}/{car.images.length}</span>}
+                          
+                          {/* Share button */}
+                          <button onClick={() => handleShare(car)} className="btn-share-floating" title="Share vehicle">
+                            <i className="fa-solid fa-share-nodes"></i>
+                          </button>
+                        </div>
+
+                        {car.images.length > 1 && (
+                          <div className="car-thumbs">
+                            {car.images.map((src, i) => (
+                              <img key={i} src={src} className={`car-thumb ${imgIdx === i ? 'active' : ''}`} onClick={() => setSelectedImgIdx(p => ({ ...p, [car.id]: i }))} />
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="car-body">
+                          <h3 className="car-title">{car.title}</h3>
+                          <div className="car-price-wrap">
+                            <span className="car-price">KES {car.price?.toLocaleString()}</span>
+                            <span className="car-price-label">Negotiable</span>
+                          </div>
+                          <div className="car-meta">
+                            <span className="car-pill"><i className="fa-solid fa-calendar"></i> {car.year}</span>
+                            <span className="car-pill"><i className="fa-solid fa-gas-pump"></i> {car.fuelType}</span>
+                            <span className="car-pill"><i className="fa-solid fa-gears"></i> {car.transmission}</span>
+                          </div>
+
+                          {/* Expanded Details */}
+                          {exp && (
+                            <div className="car-details-expanded">
+                              <div><strong>Brand</strong><span>{car.brand}</span></div>
+                              <div><strong>Model</strong><span>{car.model}</span></div>
+                              <div><strong>Condition</strong><span>{car.condition || 'Verified Quality'}</span></div>
+                              <div><strong>Color</strong><span>{car.color}</span></div>
+                            </div>
+                          )}
+
+                          <div className="car-actions">
+                            <button className={`btn ${exp ? 'btn-ghost' : 'btn-primary'}`} onClick={() => setExpandedCardId(p => p === car.id ? null : car.id)}>
+                              {exp ? 'Less' : 'Details'}
+                            </button>
+                            <a href={`tel:${car.contactNumber}`} className="btn btn-success">
+                              <i className="fa-solid fa-phone"></i> Call
+                            </a>
+                            <a href={`https://wa.me/${WA_NUM}?text=${waMsg}`} target="_blank" className="btn btn-wa">
+                              <i className="fa-brands fa-whatsapp"></i> WA
+                            </a>
+                          </div>
+
+                          {/* Test Drive Button */}
+                          <button
+                            onClick={() => setTestDriveCar(car)}
+                            className="btn btn-ghost btn-sm"
+                            style={{ width: '100%', marginTop: '.4rem', fontSize: '.78rem', color: 'var(--text-2)' }}
+                          >
+                            <i className="fa-regular fa-calendar-check" style={{ color: 'var(--red)', marginRight: '.3rem' }}></i> Book Test Drive on Kiambu Road
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Trust bar */}
+              <div style={{ background: '#0a0a0e', padding: '1.5rem 1rem', marginTop: '2rem', borderTop: '1px solid rgba(225,29,72,.15)' }}>
+                <div style={{ maxWidth: '1160px', margin: '0 auto', display: 'flex', justifyContent: 'center', gap: 'clamp(1rem, 5vw, 4rem)', flexWrap: 'wrap' }}>
+                  {[
+                    ['fa-shield-halved', 'Certified Inspection & Clean Titles'],
+                    ['fa-handshake', 'Transparent Deals & Trade-ins'],
+                    ['fa-road', 'Test Drives on Kiambu Road'],
+                    ['fa-user-check', 'Dedicated Motor Managers']
+                  ].map(([icon, text]) => (
+                    <div key={text} style={{ display: 'flex', alignItems: 'center', gap: '.45rem', color: 'rgba(255,255,255,.8)', fontSize: '.82rem', fontWeight: 600 }}>
+                      <i className={`fa-solid ${icon}`} style={{ color: 'var(--red-lt)' }}></i> {text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <footer className="footer">
+                <div className="footer-grid">
+                  <div>
+                    <h3>BLUESEAL MOTOR MANAGER'S LTD</h3>
+                    <p style={{ color: 'var(--red-lt)', fontWeight: 600, fontStyle: 'italic', marginBottom: '.6rem' }}>Precision in every mile</p>
+                    <p>📍 Kiambu Road, Nairobi, Kenya</p>
+                    <p>✉️ <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+                    <p>🕒 Mon – Sun: 8:30 am – 6:30 pm</p>
+                    <p style={{ fontWeight: 700, color: '#fff', marginTop: '.5rem', fontSize: '1.05rem' }}>📞 0733-493-804</p>
+                  </div>
+                  <div>
+                    <h3>Showroom Location</h3>
+                    <iframe
+                      title="Blue Seal Motor Managers Kiambu Road Location"
+                      src="https://maps.google.com/maps?q=Kiambu%20Road,%20Nairobi,%20Kenya&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                      width="100%" height="155"
+                      style={{ border: 0, borderRadius: 'var(--r)', display: 'block', marginTop: '.5rem', filter: 'brightness(.9) saturate(.9)' }}
+                      allowFullScreen="" loading="lazy" />
+                  </div>
+                </div>
+                <div className="footer-bottom">
+                  <span>© {new Date().getFullYear()} BLUESEAL MOTOR MANAGER'S LTD (BMM). All rights reserved.</span>
+                  
+                  {/* Footer Admin Button */}
+                  <button 
+                    onClick={() => setShowAdmin(true)} 
+                    className="btn btn-ghost btn-sm" 
+                    style={{ color: 'var(--text-3)', fontSize: '.75rem', padding: '.3rem .7rem' }}
+                    title="Open Dealer Admin Login"
+                  >
+                    <i className="fa-solid fa-lock" style={{ fontSize: '.7rem', marginRight: '.3rem' }}></i> Dealer Admin Login
+                  </button>
+                </div>
+              </footer>
+
+              {/* Floating WhatsApp */}
+              <a href={`https://wa.me/${WA_NUM}?text=${encodeURIComponent('Hi Blue Seal Motor Managers (BMM), I would like to enquire about a car on Kiambu Road.')}`} target="_blank" className="fab-wa">
+                <i className="fa-brands fa-whatsapp"></i>
+              </a>
+            </>
+          )}
+
+          {/* Fullscreen Image Modal */}
+          {fullscreenImg && (
+            <div className="modal-overlay" onClick={() => setFullscreenImg(null)}>
+              <img src={fullscreenImg} alt="Full view" className="modal-img" onClick={e => e.stopPropagation()} />
+              <button className="modal-close" onClick={() => setFullscreenImg(null)}>✕</button>
+            </div>
+          )}
+
+          {/* Financing Loan Calculator Modal */}
+          {calculatorCar && (
+            <div className="modal-overlay" onClick={() => setCalculatorCar(null)}>
+              <div className="modal-card" onClick={e => e.stopPropagation()}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+                    <i className="fa-solid fa-calculator" style={{ color: 'var(--red)' }}></i> Vehicle Financing Calculator
+                  </h3>
+                  <button onClick={() => setCalculatorCar(null)} className="btn btn-ghost btn-sm">✕</button>
+                </div>
+
+                <p style={{ fontSize: '.85rem', color: 'var(--text-2)', marginBottom: '1rem' }}>
+                  Estimate monthly bank financing payments for <strong>{calculatorCar.title}</strong> (KES {calcPrice.toLocaleString()}).
+                </p>
+
+                <div className="calc-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.85rem', fontWeight: 700 }}>
+                    <span>Deposit ({depositPct}%):</span>
+                    <span style={{ color: 'var(--red)' }}>KES {depositAmount.toLocaleString()}</span>
+                  </div>
+                  <input type="range" min="10" max="60" step="5" value={depositPct} onChange={e => setDepositPct(Number(e.target.value))} className="calc-range" />
+                </div>
+
+                <div className="calc-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.85rem', fontWeight: 700 }}>
+                    <span>Repayment Period:</span>
+                    <span>{loanMonths} Months ({loanMonths / 12} Years)</span>
+                  </div>
+                  <input type="range" min="12" max="60" step="6" value={loanMonths} onChange={e => setLoanMonths(Number(e.target.value))} className="calc-range" />
+                </div>
+
+                <div className="calc-result-box">
+                  <div style={{ fontSize: '.75rem', textTransform: 'uppercase', color: 'var(--text-3)', fontWeight: 700 }}>Estimated Monthly Payment</div>
+                  <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--red)', marginTop: '.2rem' }}>
+                    KES {monthlyPayment.toLocaleString()} <span style={{ fontSize: '.85rem', color: 'var(--text-2)', fontWeight: 500 }}>/ mo</span>
+                  </div>
+                  <div style={{ fontSize: '.75rem', color: 'var(--text-2)', marginTop: '.35rem' }}>
+                    Based on ~13.5% p.a. indicative commercial bank rate.
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '.5rem', marginTop: '1rem' }}>
+                  <a
+                    href={`https://wa.me/${WA_NUM}?text=${encodeURIComponent(`Hi Blue Seal Motor Managers (BMM), I would like to discuss bank financing for ${calculatorCar.title} (Deposit: KES ${depositAmount.toLocaleString()}, ~KES ${monthlyPayment.toLocaleString()}/mo for ${loanMonths} months).`)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="btn btn-primary" style={{ flex: 1 }}
+                  >
+                    <i className="fa-brands fa-whatsapp"></i> Enquire Financing with Manager
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Test Drive Booking Modal */}
+          {testDriveCar && (
+            <div className="modal-overlay" onClick={() => setTestDriveCar(null)}>
+              <div className="modal-card" onClick={e => e.stopPropagation()}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+                    <i className="fa-solid fa-calendar-check" style={{ color: 'var(--red)' }}></i> Schedule a Test Drive
+                  </h3>
+                  <button onClick={() => setTestDriveCar(null)} className="btn btn-ghost btn-sm">✕</button>
+                </div>
+
+                <p style={{ fontSize: '.85rem', color: 'var(--text-2)', marginBottom: '1.2rem' }}>
+                  Experience <strong>{testDriveCar.title}</strong> at our Kiambu Road showroom.
+                </p>
+
+                <form onSubmit={handleTestDriveSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+                  <div>
+                    <label className="form-label">Full Name *</label>
+                    <input
+                      type="text" required placeholder="e.g. John Kamau"
+                      value={testDriveForm.name} onChange={e => setTestDriveForm(p => ({ ...p, name: e.target.value }))}
+                      className="form-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Phone / WhatsApp Number *</label>
+                    <input
+                      type="tel" required placeholder="07XXXXXXXX"
+                      value={testDriveForm.phone} onChange={e => setTestDriveForm(p => ({ ...p, phone: e.target.value }))}
+                      className="form-input"
+                    />
+                  </div>
+
+                  <div className="form-grid-2">
+                    <div>
+                      <label className="form-label">Preferred Date *</label>
+                      <input
+                        type="date" required
+                        value={testDriveForm.date} onChange={e => setTestDriveForm(p => ({ ...p, date: e.target.value }))}
+                        className="form-input"
+                      />
+                    </div>
+                    <div>
+                      <label className="form-label">Time Slot *</label>
+                      <select
+                        value={testDriveForm.time} onChange={e => setTestDriveForm(p => ({ ...p, time: e.target.value }))}
+                        className="form-select"
+                      >
+                        <option>Morning (9:00 AM - 12:00 PM)</option>
+                        <option>Afternoon (1:00 PM - 4:00 PM)</option>
+                        <option>Evening (4:00 PM - 6:00 PM)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn btn-primary btn-lg" style={{ marginTop: '.5rem' }}>
+                    <i className="fa-brands fa-whatsapp"></i> Confirm Booking on WhatsApp
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

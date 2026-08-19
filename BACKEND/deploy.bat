@@ -1,5 +1,5 @@
 @echo off
-echo Deploying SMVT Backend to Vercel...
+echo Deploying Blue Seal Motor Managers (BMM) Backend to Vercel...
 echo.
 echo Step 1: Login to Vercel (if not already logged in)
 call npx vercel login

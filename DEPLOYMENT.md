@@ -1,6 +1,6 @@
-# Deployment
+# Blue Seal Motor Managers Ltd (BMM) - Deployment Guide
 
-This repo contains a React frontend and an Express/Supabase backend.
+This repo contains the React frontend and Express/Supabase backend for Blue Seal Motor Managers Ltd (BMM).
 
 ## Backend
 

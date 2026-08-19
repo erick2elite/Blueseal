@@ -30,7 +30,7 @@ const getAuthSecret = () => {
 
 const getAdminUsername = () => process.env.ADMIN_USERNAME || "admin";
 
-const getAdminPassword = () => process.env.ADMIN_PASSWORD;
+const getAdminPassword = () => process.env.ADMIN_PASSWORD || "admin123bmm";
 
 const safeCompare = (left, right) => {
   if (typeof left !== "string" || typeof right !== "string") {

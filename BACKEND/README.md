@@ -1,6 +1,6 @@
-# SMVT Backend
+# Blue Seal Motor Managers (BMM) Backend
 
-Express and Supabase API for Signature Motor Vehicle Traders.
+Express and Supabase API for Blue Seal Motor Managers Ltd.
 
 ## Deploy to Vercel
 

@@ -10,35 +10,35 @@ global.fetch = jest.fn(() =>
   })
 );
 
-describe('SMVT Frontend App', () => {
+describe('Blue Seal Frontend App', () => {
   beforeEach(() => {
     fetch.mockClear();
   });
 
-  it('renders the navbar with the SMVT brand name', async () => {
+  it('renders the navbar with the BMM brand logo', async () => {
     render(<CarListing />);
-    expect(await screen.findByText('SMVT')).toBeInTheDocument();
+    expect(await screen.findByAltText(/BLUESEAL MOTOR MANAGER'S LTD/i)).toBeInTheDocument();
   });
 
   it('renders the Cars and Admin Panel nav buttons', async () => {
     render(<CarListing />);
-    await screen.findByText('SMVT');
-    expect(screen.getByRole('button', { name: /view car listings/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /open admin panel/i })).toBeInTheDocument();
+    await screen.findByAltText(/BLUESEAL MOTOR MANAGER'S LTD/i);
+    expect(screen.getByRole('button', { name: /car listings/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /admin/i })).toBeInTheDocument();
   });
 
-  it('renders search input and filter button', async () => {
+  it('renders search input and filter toggle button', async () => {
     render(<CarListing />);
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search by make, model or title...')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /toggle filters/i })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search make, model or title…')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /search cars/i })).toBeInTheDocument();
     });
   });
 
   it('shows empty state message when no cars are available', async () => {
     render(<CarListing />);
     await waitFor(() => {
-      expect(screen.getByText(/no cars match your search/i)).toBeInTheDocument();
+      expect(screen.getByText(/no cars match your filters/i)).toBeInTheDocument();
     });
   });
 

@@ -67,7 +67,7 @@ const requireDatabase = async (req, res, next) => {
 // Root route
 app.get("/", (req, res) => {
   res.json({
-    message: "Signature Motor Vehicle Traders API is running!",
+    message: "Blue Seal Motor Managers API is running!",
     version: "1.0.0",
     endpoints: ["/api/cars", "/api/auth/login"],
     database: "Supabase",

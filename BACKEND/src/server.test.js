@@ -8,11 +8,11 @@ vi.mock('./config/db.js', () => ({
   default: vi.fn().mockResolvedValue(true)
 }));
 
-describe('SMVT Backend API', () => {
+describe('Blue Seal Backend API', () => {
   it('should return API status on GET /', async () => {
     const res = await request(app).get('/');
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe('Signature Motor Vehicle Traders API is running!');
+    expect(res.body.message).toBe('Blue Seal Motor Managers API is running!');
     expect(res.body.endpoints).toContain('/api/cars');
   });
 

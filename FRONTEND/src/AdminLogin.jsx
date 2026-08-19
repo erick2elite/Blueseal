@@ -15,7 +15,7 @@ const AdminLogin = ({ onLogin }) => {
       const res  = await fetch(`${API_URL}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(creds) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Invalid credentials');
-      localStorage.setItem('smvtAdminToken', data.token);
+      localStorage.setItem('bluesealAdminToken', data.token);
       onLogin(data.token);
     } catch (err) {
       setError(err.message || 'Unable to log in. Please try again.');
@@ -28,7 +28,7 @@ const AdminLogin = ({ onLogin }) => {
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div className="login-icon"><FaCarSide size={28} color="#fff" /></div>
           <h2 style={{ fontSize: '1.35rem', fontWeight: 900, marginBottom: '.25rem' }}>Admin Access</h2>
-          <p style={{ color: 'var(--text-2)', fontSize: '.875rem' }}>Signature Motor Vehicle Traders</p>
+          <p style={{ color: 'var(--text-2)', fontSize: '.875rem' }}>BLUESEAL MOTOR MANAGER'S LTD (BMM)</p>
         </div>
         {error && <div className="alert alert--error" style={{ marginBottom: '1.25rem' }}>{error}</div>}
         <form onSubmit={handleSubmit}>
