@@ -1,3 +1,4 @@
+// Blue Seal Motor Managers — v2.1.0
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
