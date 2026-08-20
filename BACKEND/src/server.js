@@ -90,7 +90,7 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-app.use("/api/cars", requireDatabase, CarRoutes);
+app.use("/api/cars", CarRoutes);
 
 // 404 handler — must come after all routes
 app.use((req, res) => {

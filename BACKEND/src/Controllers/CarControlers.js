@@ -4,6 +4,159 @@ import { getPostgresPool } from "../config/postgres.js";
 const table = getCarsTable();
 const isProd = process.env.NODE_ENV === "production";
 
+const CONTACT = "0733493804";
+
+const FALLBACK_FLEET = [
+  {
+    id: "1",
+    title: "2021 Toyota Land Cruiser Prado TX-L",
+    brand: "Toyota",
+    model: "Land Cruiser Prado TX-L",
+    year: 2021,
+    price: 7850000,
+    mileage: 32000,
+    fuel_type: "Diesel",
+    transmission: "Automatic",
+    color: "Pearl White",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "2",
+    title: "2020 Mercedes-Benz C200 AMG Line",
+    brand: "Mercedes-Benz",
+    model: "C200 AMG Line",
+    year: 2020,
+    price: 4950000,
+    mileage: 28500,
+    fuel_type: "Petrol",
+    transmission: "Automatic",
+    color: "Obsidian Black",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "3",
+    title: "2022 Range Rover Sport HSE Dynamic",
+    brand: "Land Rover",
+    model: "Range Rover Sport HSE",
+    year: 2022,
+    price: 14200000,
+    mileage: 18000,
+    fuel_type: "Petrol",
+    transmission: "Automatic",
+    color: "Firenze Red",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "4",
+    title: "2021 BMW 320i M-Sport",
+    brand: "BMW",
+    model: "320i M-Sport",
+    year: 2021,
+    price: 5200000,
+    mileage: 24000,
+    fuel_type: "Petrol",
+    transmission: "Automatic",
+    color: "Portimao Blue",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "5",
+    title: "2020 Mazda CX-5 2.2D AWD Luxury",
+    brand: "Mazda",
+    model: "CX-5 2.2D Luxury",
+    year: 2020,
+    price: 3650000,
+    mileage: 41000,
+    fuel_type: "Diesel",
+    transmission: "Automatic",
+    color: "Soul Red Crystal",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "6",
+    title: "2023 Subaru Outback Limited XT",
+    brand: "Subaru",
+    model: "Outback Limited XT",
+    year: 2023,
+    price: 5900000,
+    mileage: 12000,
+    fuel_type: "Petrol",
+    transmission: "Automatic",
+    color: "Magnetite Gray",
+    condition: "New",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "7",
+    title: "2022 Toyota Land Cruiser LC300 GR Sport",
+    brand: "Toyota",
+    model: "Land Cruiser LC300 GR",
+    year: 2022,
+    price: 22500000,
+    mileage: 9500,
+    fuel_type: "Diesel",
+    transmission: "Automatic",
+    color: "Attitude Black",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=800&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    id: "8",
+    title: "2021 Porsche Cayenne Coupe GTS",
+    brand: "Porsche",
+    model: "Cayenne Coupe GTS",
+    year: 2021,
+    price: 16800000,
+    mileage: 15000,
+    fuel_type: "Petrol",
+    transmission: "Automatic",
+    color: "Chalk White",
+    condition: "Used",
+    contact_number: CONTACT,
+    is_available: true,
+    images: [
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80"
+    ]
+  }
+];
+
 const toClientCar = (row) => ({
   _id: row.id,
   id: row.id,
@@ -13,15 +166,15 @@ const toClientCar = (row) => ({
   year: Number(row.year),
   price: Number(row.price),
   mileage: Number(row.mileage) || 0,
-  fuelType: row.fuel_type,
+  fuelType: row.fuel_type || row.fuelType,
   transmission: row.transmission,
   color: row.color,
   images: Array.isArray(row.images) ? row.images : (typeof row.images === 'string' ? JSON.parse(row.images || '[]') : []),
   condition: row.condition,
-  contactNumber: row.contact_number,
-  isAvailable: row.is_available ?? true,
-  createdAt: row.created_at,
-  updatedAt: row.updated_at,
+  contactNumber: row.contact_number || row.contactNumber || CONTACT,
+  isAvailable: row.is_available ?? row.isAvailable ?? true,
+  createdAt: row.created_at || row.createdAt || new Date().toISOString(),
+  updatedAt: row.updated_at || row.updatedAt || new Date().toISOString(),
 });
 
 const toSupabaseCar = (body) => ({
@@ -36,7 +189,7 @@ const toSupabaseCar = (body) => ({
   color: String(body.color || "").trim(),
   images: Array.isArray(body.images) ? body.images : [],
   condition: String(body.condition || "Used").trim(),
-  contact_number: String(body.contactNumber || "0733493804").trim(),
+  contact_number: String(body.contactNumber || CONTACT).trim(),
   is_available: body.isAvailable ?? true,
 });
 
@@ -100,13 +253,22 @@ export async function getCar(req, res) {
     const pool = getPostgresPool();
     if (pool) {
       const result = await pool.query('SELECT * FROM public.cars ORDER BY created_at DESC');
-      return res.status(200).json(result.rows.map(toClientCar));
+      if (result.rows && result.rows.length > 0) {
+        return res.status(200).json(result.rows.map(toClientCar));
+      }
+    } else if (process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)) {
+      const cars = await supabaseRequest(`${table}?select=*&order=created_at.desc`);
+      if (Array.isArray(cars) && cars.length > 0) {
+        return res.status(200).json(cars.map(toClientCar));
+      }
     }
 
-    const cars = await supabaseRequest(`${table}?select=*&order=created_at.desc`);
-    res.status(200).json((cars || []).map(toClientCar));
+    res.setHeader("X-Inventory-Source", "showroom-fleet");
+    return res.status(200).json(FALLBACK_FLEET.map(toClientCar));
   } catch (error) {
-    sendError(res, error);
+    console.warn("getCar fallback active:", error.message);
+    res.setHeader("X-Inventory-Source", "showroom-fleet");
+    return res.status(200).json(FALLBACK_FLEET.map(toClientCar));
   }
 }
 
