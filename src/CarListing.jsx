@@ -208,6 +208,7 @@ const App = () => {
   const [selectedImgIdx, setSelectedImgIdx] = useState({});
   const [cars, setCars]           = useState(INITIAL_CARS);
   const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState('');
   const [fullscreenImg, setFullscreenImg] = useState(null);
 
   // Advanced Tools Modals & Toasts
