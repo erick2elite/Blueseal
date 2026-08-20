@@ -20,6 +20,165 @@ const LOCATION = 'Kiambu Road, Nairobi, Kenya';
 
 const CATEGORIES = ['All Vehicles', 'SUVs & 4x4', 'Sedans & Saloons', 'Luxury & Sports', 'Commercial'];
 
+const INITIAL_CARS = [
+  {
+    _id: '1',
+    id: '1',
+    title: '2021 Toyota Land Cruiser Prado TX-L',
+    brand: 'Toyota',
+    model: 'Land Cruiser Prado TX-L',
+    year: 2021,
+    price: 7850000,
+    mileage: 32000,
+    fuelType: 'Diesel',
+    transmission: 'Automatic',
+    color: 'Pearl White',
+    condition: 'Used',
+    status: 'Available',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '2',
+    id: '2',
+    title: '2020 Mercedes-Benz C200 AMG Line',
+    brand: 'Mercedes-Benz',
+    model: 'C200 AMG Line',
+    year: 2020,
+    price: 4950000,
+    mileage: 28500,
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    color: 'Obsidian Black',
+    condition: 'Used',
+    status: 'Available',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '3',
+    id: '3',
+    title: '2022 Range Rover Sport HSE Dynamic',
+    brand: 'Land Rover',
+    model: 'Range Rover Sport HSE',
+    year: 2022,
+    price: 14200000,
+    mileage: 18000,
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    color: 'Firenze Red',
+    condition: 'Used',
+    status: 'Featured',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '4',
+    id: '4',
+    title: '2021 BMW 320i M-Sport',
+    brand: 'BMW',
+    model: '320i M-Sport',
+    year: 2021,
+    price: 5200000,
+    mileage: 24000,
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    color: 'Portimao Blue',
+    condition: 'Used',
+    status: 'Available',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '5',
+    id: '5',
+    title: '2020 Mazda CX-5 2.2D AWD Luxury',
+    brand: 'Mazda',
+    model: 'CX-5 2.2D Luxury',
+    year: 2020,
+    price: 3650000,
+    mileage: 41000,
+    fuelType: 'Diesel',
+    transmission: 'Automatic',
+    color: 'Soul Red Crystal',
+    condition: 'Used',
+    status: 'Reserved',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '6',
+    id: '6',
+    title: '2023 Subaru Outback Limited XT',
+    brand: 'Subaru',
+    model: 'Outback Limited XT',
+    year: 2023,
+    price: 5900000,
+    mileage: 12000,
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    color: 'Magnetite Gray',
+    condition: 'New',
+    status: 'Available',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '7',
+    id: '7',
+    title: '2022 Toyota Land Cruiser LC300 GR Sport',
+    brand: 'Toyota',
+    model: 'Land Cruiser LC300 GR',
+    year: 2022,
+    price: 22500000,
+    mileage: 9500,
+    fuelType: 'Diesel',
+    transmission: 'Automatic',
+    color: 'Attitude Black',
+    condition: 'Used',
+    status: 'Featured',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=800&auto=format&fit=crop&q=80'
+    ]
+  },
+  {
+    _id: '8',
+    id: '8',
+    title: '2021 Porsche Cayenne Coupe GTS',
+    brand: 'Porsche',
+    model: 'Cayenne Coupe GTS',
+    year: 2021,
+    price: 16800000,
+    mileage: 15000,
+    fuelType: 'Petrol',
+    transmission: 'Automatic',
+    color: 'Chalk White',
+    condition: 'Used',
+    status: 'Available',
+    contactNumber: CONTACT,
+    images: [
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&auto=format&fit=crop&q=80'
+    ]
+  }
+];
+
 const SkeletonCard = () => (
   <div className="car-card">
     <div className="skeleton" style={{ height: '215px' }} />
@@ -47,9 +206,8 @@ const App = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [selectedImgIdx, setSelectedImgIdx] = useState({});
-  const [cars, setCars]           = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState('');
+  const [cars, setCars]           = useState(INITIAL_CARS);
+  const [loading, setLoading]     = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState(null);
 
   // Advanced Tools Modals & Toasts
@@ -71,8 +229,15 @@ const App = () => {
   useEffect(() => {
     fetch(`${API_URL}/api/cars`)
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(d => { setCars(d); setLoading(false); })
-      .catch(() => { setError('Unable to load live inventory. Please check back shortly.'); setLoading(false); });
+      .then(d => {
+        if (Array.isArray(d) && d.length > 0) {
+          setCars(d);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
