@@ -2,15 +2,7 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/test-db",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/((?!api/|test-db|.*\\..*).*)",
+      "source": "/((?!api/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
