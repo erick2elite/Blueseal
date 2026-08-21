@@ -9,5 +9,10 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  return loginAdmin(req, res);
+  try {
+    return await loginAdmin(req, res);
+  } catch (err) {
+    console.error("Error in /api/auth/login handler:", err);
+    return res.status(500).json({ message: err.message || "Internal server error" });
+  }
 }

@@ -9,5 +9,10 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  return requireAdmin(req, res, () => verifyAdminAuth(req, res));
+  try {
+    return requireAdmin(req, res, () => verifyAdminAuth(req, res));
+  } catch (err) {
+    console.error("Error in /api/auth/verify handler:", err);
+    return res.status(500).json({ message: err.message || "Internal server error" });
+  }
 }
