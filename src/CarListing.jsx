@@ -208,7 +208,7 @@ const App = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
   const [selectedImgIdx, setSelectedImgIdx] = useState({});
-  const [cars, setCars]           = useState(INITIAL_CARS);
+  const [cars, setCars]           = useState(() => mergeCarsWithLocal(INITIAL_CARS));
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState('');
   const [fullscreenImg, setFullscreenImg] = useState(null);
@@ -392,7 +392,7 @@ const App = () => {
       {/* ── Navbar ── */}
       <nav className="navbar">
         <div className="navbar-brand" onClick={() => setShowAdmin(false)} style={{ cursor: 'pointer' }}>
-          <img src={logo} alt="BLUESEAL MOTOR MANAGER'S LTD (BMM)" className="navbar-logo" />
+          <img src={logo} alt="BLUESEAL MOTOR MANAGER'S LTD (BMM)" className="navbar-logo" loading="eager" decoding="async" fetchpriority="high" />
         </div>
         <div className="navbar-actions">
           <button onClick={() => setShowAdmin(false)} className={`btn btn-nav ${!showAdmin ? 'active' : ''}`} aria-label="Car listings">
@@ -562,7 +562,7 @@ const App = () => {
                       <motion.article key={car._id} layout initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .22 }} className="car-card">
                         {/* Image Wrap */}
                         <div className="car-image-wrap">
-                          <img src={img} alt={car.title} className="car-image"
+                          <img src={img} alt={car.title} className="car-image" loading="lazy" decoding="async"
                             onClick={() => car.images?.length && setFullscreenImg(img)}
                             onError={e => { e.target.src = NO_IMAGE_SVG; }}
                             style={{ cursor: car.images?.length ? 'zoom-in' : 'default' }} />
@@ -582,7 +582,7 @@ const App = () => {
                         {car.images?.length > 1 && (
                           <div className="car-thumbs">
                             {car.images.map((src, i) => (
-                              <img key={i} src={src} alt={`View ${i + 1}`}
+                              <img key={i} src={src} alt={`View ${i + 1}`} loading="lazy" decoding="async"
                                 className={`car-thumb ${imgIdx === i ? 'active' : ''}`}
                                 onClick={() => setSelectedImgIdx(p => ({ ...p, [car._id]: i }))}
                                 onError={e => { e.target.src = NO_IMAGE_SVG; }} />

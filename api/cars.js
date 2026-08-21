@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
       return await getCar(req, res);
     }
 
