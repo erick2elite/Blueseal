@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 // CORS middleware
 app.use((req, res, next) => {
-  const requestOrigin = req.get("Origin");
+  const requestOrigin = (req.get ? req.get("Origin") : req.headers?.origin) || "";
   const allowAnyOrigin = allowedOrigins.includes("*");
   const isLocalhost = requestOrigin && (requestOrigin.startsWith("http://localhost:") || requestOrigin.startsWith("http://127.0.0.1:"));
   const isAllowed = allowAnyOrigin || !requestOrigin || allowedOrigins.includes(requestOrigin) || (!isProd && isLocalhost);

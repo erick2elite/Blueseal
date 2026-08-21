@@ -193,7 +193,7 @@ export async function loginAdmin(req, res) {
 }
 
 export function requireAdmin(req, res, next) {
-  const authHeader = req.get("Authorization") || "";
+  const authHeader = (req.get ? req.get("Authorization") : (req.headers?.authorization || req.headers?.Authorization)) || "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
   const payload = verifyToken(token);
 
