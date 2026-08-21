@@ -10,7 +10,7 @@ import {
 import logo from './assets/logo.png';
 import AdminPanel from './AdminPanel.jsx';
 import AdminLogin from './AdminLogin.jsx';
-import { API_URL } from './api.js';
+import { API_URL, mergeCarsWithLocal } from './api.js';
 import './smvt.css';
 
 const NO_IMAGE_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='260' viewBox='0 0 400 260'%3E%3Crect width='400' height='260' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Inter,sans-serif' font-size='14' fill='%2394a3b8'%3ENo Image%3C/text%3E%3C/svg%3E`;
@@ -229,18 +229,21 @@ const App = () => {
     setTimeout(() => setToastMsg(''), 3500);
   };
 
-  useEffect(() => {
+  const loadCars = () => {
     fetch(`${API_URL}/api/cars`)
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(d => {
-        if (Array.isArray(d) && d.length > 0) {
-          setCars(d);
-        }
+        setCars(mergeCarsWithLocal(Array.isArray(d) ? d : []));
         setLoading(false);
       })
       .catch(() => {
+        setCars(mergeCarsWithLocal(INITIAL_CARS));
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadCars();
   }, []);
 
   useEffect(() => {
@@ -416,7 +419,7 @@ const App = () => {
       </nav>
 
       {showAdmin ? (
-        isAuthenticated ? <AdminPanel authToken={authToken} onUnauthorized={handleLogout} /> : <AdminLogin onLogin={setAuthToken} />
+        isAuthenticated ? <AdminPanel authToken={authToken} onUnauthorized={handleLogout} onCarAddedOrUpdated={loadCars} /> : <AdminLogin onLogin={setAuthToken} />
       ) : (
         <>
           {/* ── Hero ── */}

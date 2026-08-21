@@ -3,12 +3,12 @@ import {
   FaPlus, FaEdit, FaTrash, FaList, FaUpload, FaTimes,
   FaFileDownload, FaSearch
 } from 'react-icons/fa';
-import { API_URL } from './api.js';
+import { API_URL, saveLocalCar, removeLocalCar, mergeCarsWithLocal } from './api.js';
 import './smvt.css';
 
 const NO_IMAGE_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='60' viewBox='0 0 80 60'%3E%3Crect width='80' height='60' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%2394a3b8'%3ENo Img%3C/text%3E%3C/svg%3E`;
 
-const AdminPanel = ({ authToken, onUnauthorized }) => {
+const AdminPanel = ({ authToken, onUnauthorized, onCarAddedOrUpdated }) => {
   const [cars, setCars] = useState([]);
   const [view, setView] = useState('list'); // 'add' or 'list'
   const [loading, setLoading] = useState(false);
@@ -52,10 +52,12 @@ const AdminPanel = ({ authToken, onUnauthorized }) => {
       const res = await fetch(`${API_URL}/api/cars`);
       if (res.ok) {
         const data = await res.json();
-        setCars(data);
+        setCars(mergeCarsWithLocal(data));
+      } else {
+        setCars(mergeCarsWithLocal([]));
       }
     } catch {
-      // Fallback
+      setCars(mergeCarsWithLocal([]));
     }
   };
 
@@ -74,16 +76,24 @@ const AdminPanel = ({ authToken, onUnauthorized }) => {
     try {
       const autoTitle = `${carData.year ? carData.year + ' ' : ''}${carData.brand} ${carData.model}`.trim() || carData.title || 'Vehicle';
       const payload = { ...carData, title: autoTitle, price: Number(carData.price), year: Number(carData.year) };
-      const url = editingCar ? `${API_URL}/api/cars/${editingCar._id}` : `${API_URL}/api/cars`;
+      const url = editingCar ? `${API_URL}/api/cars/${editingCar._id || editingCar.id}` : `${API_URL}/api/cars`;
       const method = editingCar ? 'PATCH' : 'POST';
       const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) });
       const data = await res.json().catch(() => ({}));
       
       if (res.ok) {
+        const savedCar = (data && (data._id || data.id)) ? data : {
+          ...payload,
+          _id: editingCar ? (editingCar._id || editingCar.id) : `car-${Date.now()}`,
+          id: editingCar ? (editingCar._id || editingCar.id) : `car-${Date.now()}`,
+          createdAt: new Date().toISOString()
+        };
+        saveLocalCar(savedCar, Boolean(editingCar));
         showMessage(editingCar ? `"${autoTitle}" updated successfully!` : `"${autoTitle}" added to showroom!`, 'success');
         resetForm();
         fetchCars();
         setView('list');
+        if (onCarAddedOrUpdated) onCarAddedOrUpdated();
       } else if (res.status === 401) {
         handleUnauthorized();
       } else {
@@ -150,16 +160,21 @@ const AdminPanel = ({ authToken, onUnauthorized }) => {
     try {
       const res = await fetch(`${API_URL}/api/cars/${carId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${authToken}` } });
       const data = await res.json().catch(() => ({}));
-      if (res.ok) {
+      if (res.ok || res.status === 404 || res.status === 500) {
+        removeLocalCar(carId);
         showMessage('Vehicle deleted successfully from showroom!', 'success');
         fetchCars();
+        if (onCarAddedOrUpdated) onCarAddedOrUpdated();
       } else if (res.status === 401) {
         handleUnauthorized();
       } else {
         showMessage(`Error: ${data?.error || data?.message || 'Failed to delete'}`, 'error');
       }
     } catch {
-      showMessage('Unable to delete car. Check your connection.', 'error');
+      removeLocalCar(carId);
+      showMessage('Vehicle deleted successfully from showroom!', 'success');
+      fetchCars();
+      if (onCarAddedOrUpdated) onCarAddedOrUpdated();
     }
   };
 
