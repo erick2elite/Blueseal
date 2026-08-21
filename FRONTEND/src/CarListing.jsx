@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaFilter, FaPhone, FaWhatsapp, FaCog, FaSignOutAlt, FaCarSide,
   FaChevronDown, FaStar, FaShareAlt, FaCalculator, FaCalendarCheck,
-  FaSearch, FaSortAmountDown, FaShieldAlt, FaHandshake, FaRoad, FaCheck
+  FaSearch, FaSortAmountDown, FaShieldAlt, FaHandshake, FaRoad, FaCheck,
+  FaCheckCircle, FaTimes, FaCalendarAlt, FaGasPump, FaCogs, FaPalette
 } from 'react-icons/fa';
 import logo from './assets/logo.png';
 import AdminPanel from './AdminPanel.jsx';
