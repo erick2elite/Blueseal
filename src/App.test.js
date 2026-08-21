@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import CarListing from './CarListing';
+import CarListing from './CarListing.jsx';
 
 // Mock fetch to simulate an empty cars list
 global.fetch = jest.fn(() =>

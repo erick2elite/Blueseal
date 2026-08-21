@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaLock, FaUser, FaEye, FaEyeSlash, FaShieldAlt, FaClock } from 'react-icons/fa';
-import { API_URL } from './api';
+import { API_URL } from './api.js';
 import './smvt.css';
 
 const AdminLogin = ({ onLogin }) => {
